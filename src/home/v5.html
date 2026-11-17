@@ -37,6 +37,7 @@
    --tone  working and progress (the brand green, with tints)
    --need  needs you (a quiet sand)
    --info  sources and citations (a quiet sky)
+   --lilac what is live right now (the notice, the night clock)
    --accent is for actions and lit panes only.
    ===================================================================== */
 
@@ -72,7 +73,7 @@ html[data-accent="frost"]{             /* frost: the pale blue of the lawn befor
   --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px; --s8:64px; --s9:96px;
   --r-glass:28px; --r-inner:16px; --r-ctl:12px; --r-chip:8px; --r-pill:999px;
   --blur:26px; --blur-deep:52px;
-  --nav:72px;
+  --nav:72px; --navh:calc(var(--nav) * var(--z,1));
   --F:54lvh;                           /* height of the band of light between two sections */
 
   --t-lead:clamp(18px,1.45vw,21px);
@@ -94,6 +95,7 @@ html[data-accent="frost"]{             /* frost: the pale blue of the lawn befor
   --night-tone-2:var(--g-500);
   --night-tone-soft:color-mix(in srgb,var(--g-300) 14%,transparent);
   --night-need:#E8C390;
+  --night-lilac:#C9BBF2;
   --night-info:#A9CDEE;
   --night-info-soft:color-mix(in srgb,#A9CDEE 13%,transparent);
   --night-glass:color-mix(in srgb,var(--night-base) 54%,transparent);
@@ -124,6 +126,7 @@ html[data-accent="frost"]{             /* frost: the pale blue of the lawn befor
   --day-tone-2:var(--g-500);
   --day-tone-soft:color-mix(in srgb,var(--g-700) 11%,transparent);
   --day-need:#8E5F16;
+  --day-lilac:#5E4BA0;
   --day-info:#28618C;
   --day-info-soft:color-mix(in srgb,#28618C 10%,transparent);
   --day-glass:rgb(255 255 255 / .46);
@@ -147,7 +150,7 @@ html[data-accent="frost"]{             /* frost: the pale blue of the lawn befor
 [data-light="night"]{
   --fg:var(--night-fg); --fg2:var(--night-fg2); --fg3:var(--night-fg3); --text:var(--night-text); --muted:var(--night-muted);
   --accent:var(--night-accent); --accent-ink:var(--night-accent-ink);
-  --tone:var(--night-tone); --tone-2:var(--night-tone-2); --tone-soft:var(--night-tone-soft); --need:var(--night-need); --info:var(--night-info); --info-soft:var(--night-info-soft);
+  --tone:var(--night-tone); --tone-2:var(--night-tone-2); --tone-soft:var(--night-tone-soft); --need:var(--night-need); --lilac:var(--night-lilac); --info:var(--night-info); --info-soft:var(--night-info-soft);
   --glass:var(--night-glass); --glass-thin:var(--night-glass-thin); --glass-dense:var(--night-glass-dense); --glass-edge:var(--night-glass-edge); --glass-hi:var(--night-glass-hi); --glass-shadow:var(--night-glass-shadow);
   --panel:var(--night-panel); --card:var(--night-card); --field:var(--night-field); --chip:var(--night-chip); --line:var(--night-line); --halo:var(--night-halo);
   --lit:var(--night-lit); --lit-edge:var(--night-lit-edge); --glow:var(--night-glow);
@@ -155,7 +158,7 @@ html[data-accent="frost"]{             /* frost: the pale blue of the lawn befor
 [data-light="day"]{
   --fg:var(--day-fg); --fg2:var(--day-fg2); --fg3:var(--day-fg3); --text:var(--day-text); --muted:var(--day-muted);
   --accent:var(--day-accent); --accent-ink:var(--day-accent-ink);
-  --tone:var(--day-tone); --tone-2:var(--day-tone-2); --tone-soft:var(--day-tone-soft); --need:var(--day-need); --info:var(--day-info); --info-soft:var(--day-info-soft);
+  --tone:var(--day-tone); --tone-2:var(--day-tone-2); --tone-soft:var(--day-tone-soft); --need:var(--day-need); --lilac:var(--day-lilac); --info:var(--day-info); --info-soft:var(--day-info-soft);
   --glass:var(--day-glass); --glass-thin:var(--day-glass-thin); --glass-dense:var(--day-glass-dense); --glass-edge:var(--day-glass-edge); --glass-hi:var(--day-glass-hi); --glass-shadow:var(--day-glass-shadow);
   --panel:var(--day-panel); --card:var(--day-card); --field:var(--day-field); --chip:var(--day-chip); --line:var(--day-line); --halo:var(--day-halo);
   --lit:var(--day-lit); --lit-edge:var(--day-lit-edge); --glow:var(--day-glow);
@@ -269,6 +272,7 @@ section{position:relative;color:var(--fg)}
 .sun{position:absolute;left:0;top:0;width:90vmax;height:90vmax;margin:-45vmax 0 0 -45vmax;border-radius:50%;background:radial-gradient(closest-side,rgba(255,244,214,.5),rgba(255,236,190,.16) 45%,transparent 70%);mix-blend-mode:screen;opacity:0;will-change:transform,opacity}
 .scrim{position:absolute;inset:0;opacity:.14;background:linear-gradient(180deg,#0A0E26 0%,#150F26 50%,#07120F 100%)}
 .scrim.dusk{opacity:.3}
+.scrim.cool{opacity:.28;background:linear-gradient(180deg,#0B1430 0%,#16203A 55%,#0A1512 100%)}
 .clouds,.flies{position:absolute;inset:0}
 .cloud{position:absolute;left:-40vw;width:var(--w);height:var(--h);top:var(--y);border-radius:50%;background:radial-gradient(closest-side,rgba(255,182,206,.5),rgba(255,194,214,.24) 55%,transparent);animation:drift var(--t) linear infinite;animation-delay:var(--dl);will-change:transform}
 .cloud.mist{background:radial-gradient(closest-side,rgba(255,250,240,.55),rgba(255,246,232,.24) 60%,transparent)}
@@ -280,12 +284,16 @@ section{position:relative;color:var(--fg)}
 @media (min-width:1200px){
   .inner img{inset:0 auto auto -4.9%;width:110%;height:110%}
 }
+/* very wide screens crop the view from the top, so it is lowered to keep the glasshouse below the pitch */
+@media (min-width:1200px) and (min-aspect-ratio:2/1){
+  .inner img{object-position:34% 58%}
+}
 
 /* ---------- nav: wordmark, the invite once you have scrolled, the clock. No bar, only a soft blur that fades out ---------- */
-.nav{position:fixed;z-index:20;top:0;left:0;right:0;height:var(--nav);color:var(--fg)}
+.nav{position:fixed;z-index:20;top:0;left:0;right:0;height:var(--navh);color:var(--fg)}
 .nav::before{content:"";position:absolute;inset:0 0 -18px;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);-webkit-mask-image:linear-gradient(#000 45%,transparent);mask-image:linear-gradient(#000 45%,transparent);opacity:0;transition:opacity .3s}
 .scrolled .nav::before{opacity:1}
-.nav .wrap{position:relative;height:100%;display:flex;align-items:center;gap:var(--s5)}
+.nav .wrap{position:relative;height:var(--nav);display:flex;align-items:center;gap:var(--s5)}
 .dial{display:flex;align-items:center;gap:10px;font:500 var(--t-small) var(--ui);color:var(--fg);font-variant-numeric:tabular-nums}
 .dial svg{display:block;width:52px;height:24px;overflow:visible}
 .dial .arc{fill:none;stroke:var(--fg3);stroke-width:1;stroke-dasharray:1.5 3}
@@ -298,9 +306,13 @@ section{position:relative;color:var(--fg)}
 .scrolled .nav-cta{opacity:1;visibility:visible}
 
 /* ---------- 1. night: the hero. Pitch on the left, the product large on the right, the glasshouse lit below the pitch ---------- */
-.hero{min-height:calc(max(100vh,780px) + var(--F));padding:var(--nav) 0 var(--F)}
-.hero > .wrap{display:grid;grid-template-columns:minmax(0,clamp(450px,38vw,548px)) minmax(0,1fr);column-gap:56px;align-items:start}
-.pitch{min-width:0;padding-top:clamp(36px,6.6vh,62px)}
+/* The first screen centres the pitch and the product as one group. On large screens the content scales up with the viewport (--z, set in the script), so the composition holds from a laptop to a wall display. */
+.wrap{zoom:var(--z,1)}
+.hero{min-height:calc(max(100vh,700px) + var(--F));padding:var(--navh) 0 var(--F)}
+.first{min-height:calc(max(100vh,700px) - var(--navh));display:flex;align-items:center}
+.first > .wrap{width:100%;padding-bottom:34px}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,clamp(450px,38vw,548px)) minmax(0,1fr);column-gap:56px;align-items:start}
+.pitch{min-width:0;padding-top:var(--s3)}
 .hero h1{font-size:var(--t-hero);margin-left:-.04em}
 .hero h1{line-height:.84}
 .hero h1 .sub{font-size:var(--sub-size);font-weight:var(--sub-w);letter-spacing:var(--sub-track);line-height:1.1;margin:.5em 0 0 .1em;color:var(--fg)}
@@ -325,86 +337,94 @@ section{position:relative;color:var(--fg)}
 .trust li{padding:0 14px;border-left:1px solid var(--line)}
 .trust li:first-child{padding-left:0;border-left:0}
 
-/* ---------- the product: a workspace in two depths of glass, and two panes floating in front ---------- */
-.product{position:relative;min-width:0;--pane-w:264px;--pane-out:28px}
-.hero .product{margin-top:clamp(84px,11.6vh,108px);height:clamp(540px,68.5vh,632px)}
+/* ---------- the product: a workspace in two depths of glass, and two panes floating in front.
+   It has to read from across a room: few things, large, with air. Nothing in it is smaller than 12px. ---------- */
+.product{position:relative;min-width:0;--pane-w:280px;--pane-out:28px}
+.hero .product{margin-top:74px;height:clamp(540px,68.5vh,632px)}
 .ws,.pane,.notice{will-change:transform}
-.ws{position:relative;height:100%;display:grid;grid-template-columns:212px minmax(0,1fr);grid-template-rows:48px minmax(0,1fr);border-radius:var(--r-glass);overflow:hidden;font-size:var(--t-ui);line-height:1.4;color:var(--text);box-shadow:0 26px 50px -32px var(--glass-shadow)}
+.ws{position:relative;height:100%;display:grid;grid-template-columns:226px minmax(0,1fr);grid-template-rows:54px minmax(0,1fr);border-radius:var(--r-glass);overflow:hidden;font-size:13.5px;line-height:1.4;color:var(--text);box-shadow:0 26px 50px -32px var(--glass-shadow)}
 .ws::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;box-shadow:inset 0 0 0 1px var(--glass-edge),inset 0 1px 0 var(--glass-hi)}
 .bar,.run{background:var(--glass-dense);-webkit-backdrop-filter:blur(var(--blur)) saturate(1.5);backdrop-filter:blur(var(--blur)) saturate(1.5)}
 /* the sidebar is thinner glass: more of the garden comes through, more deeply blurred */
 .rail{background:var(--glass-thin);-webkit-backdrop-filter:blur(var(--blur-deep)) saturate(1.35);backdrop-filter:blur(var(--blur-deep)) saturate(1.35)}
-.bar{grid-column:1/-1;display:flex;align-items:center;gap:var(--s4);padding:0 18px;border-bottom:1px solid var(--line)}
-.bar .wordmark{font-size:19px}
-.crumb{color:var(--muted);white-space:nowrap}
-.tabs{display:flex;gap:2px;margin-left:auto}
-.tabs span{padding:5px 10px;border-radius:var(--r-chip);color:var(--muted);white-space:nowrap}
+.bar{grid-column:1/-1;display:flex;align-items:center;gap:var(--s4);padding:0 20px;border-bottom:1px solid var(--line)}
+.bar .wordmark{font-size:20px}
+.tabs{display:flex;gap:2px;margin-left:var(--s2)}
+.tabs span{padding:6px 11px;border-radius:var(--r-chip);color:var(--muted);white-space:nowrap}
 .tabs .on{background:var(--chip);color:var(--text);font-weight:500}
-.count{font-style:normal;font-weight:500;color:var(--need);margin-left:6px;font-variant-numeric:tabular-nums}
-.live{display:flex;align-items:center;gap:8px;color:var(--text);white-space:nowrap}
+.count{font-style:normal;font-weight:500;color:var(--need);margin-left:7px;font-variant-numeric:tabular-nums}
+.live{display:flex;align-items:center;gap:8px;margin-left:auto;color:var(--text);white-space:nowrap}
+.live em{font-style:normal;color:var(--muted)}
+.clock{display:flex;align-items:center;gap:7px;padding-left:var(--s4);border-left:1px solid var(--line);font:400 12px var(--mono);color:var(--text);white-space:nowrap}
+.clock svg{width:11px;height:11px;fill:var(--lilac)}
 
-.rail{padding:var(--s3);border-right:1px solid var(--line)}
-.rail h3,.pane h3{margin:4px 6px 10px;font:500 var(--t-ui) var(--ui);color:var(--muted);display:flex;justify-content:space-between}
-.agent{padding:10px 10px 11px;border-radius:var(--r-ctl);margin-bottom:4px;transition:background 1.4s ease}
+.rail{padding:14px 12px;border-right:1px solid var(--line)}
+.agent{padding:13px 12px 14px;border-radius:var(--r-ctl);margin-bottom:4px;transition:background .7s ease,box-shadow .7s ease}
 .agent.on{background:var(--card);box-shadow:inset 2px 0 0 var(--tone)}
-.agent.flash{background:var(--tone-soft);transition-duration:.2s}
-.agent .n{display:flex;align-items:center;gap:9px;font-weight:500;font-size:13.5px;letter-spacing:-.01em;color:var(--text)}
-.agent .t{margin:4px 0 9px;color:var(--muted);text-wrap:pretty}
-.meter{display:flex;align-items:center;gap:8px;font-size:var(--t-micro);color:var(--muted);font-variant-numeric:tabular-nums}
+.agent .n{display:flex;align-items:center;gap:10px;font-weight:500;font-size:14px;letter-spacing:-.012em;color:var(--text);white-space:nowrap}
+.agent .t{margin:5px 0 11px;color:var(--muted);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.agent .track{height:4px}
 
-.run{padding:var(--s4) 20px var(--s4);display:flex;flex-direction:column;min-width:0}
-.run header{display:flex;align-items:flex-start;justify-content:space-between;gap:var(--s3);padding-bottom:var(--s3);border-bottom:1px solid var(--line)}
-.run h2{margin:0;font:500 15.5px/1.3 var(--ui);letter-spacing:-.015em;color:var(--text)}
-.run h2 em{font-style:normal;color:var(--info);font-weight:400;margin-right:7px}
-.run header p{margin:3px 0 0;color:var(--muted)}
-.state{display:flex;align-items:center;gap:7px;flex:none;padding:4px 10px 4px 9px;border-radius:var(--r-pill);background:var(--tone-soft);color:var(--tone);font-weight:500;font-size:var(--t-micro);white-space:nowrap}
-.run .steps li:nth-child(n+3),.run .memo{margin-right:calc(var(--pane-w) - var(--pane-out) - 4px)}
-.steps{list-style:none;margin:var(--s3) 0 0;padding:0;position:relative}
-.steps::before{content:"";position:absolute;left:3px;top:8px;bottom:12px;width:1px;background:var(--line)}
-.steps li{position:relative;padding:0 0 11px 20px}
-.steps li > .dot{position:absolute;left:0;top:5px}
-.steps li > .dot.done{left:-1px;top:4px}
-.steps time{color:var(--muted);font-variant-numeric:tabular-nums;margin-right:6px}
-.steps strong{font-weight:500;color:var(--text)}
-.steps .src{margin:5px 4px 0 0}
-.caret{display:inline-block;width:1.5px;height:1em;margin-left:1px;background:var(--tone);vertical-align:-2px;animation:caret 1s steps(1) infinite}
-@keyframes caret{50%{opacity:0}}
-.memo{margin-top:auto;padding:11px 13px;border-radius:var(--r-ctl);background:var(--panel);box-shadow:inset 0 0 0 1px var(--line)}
-.memo h4{margin:0 0 3px;font:500 var(--t-micro) var(--ui);color:var(--muted)}
-.memo p{margin:0;color:var(--text)}
-.memo sup{font-size:9.5px;font-weight:600;color:var(--info);margin-left:1px;vertical-align:4px;line-height:0}
+.run{padding:22px 24px;display:flex;flex-direction:column;min-width:0}
+.run header{display:flex;align-items:flex-start;justify-content:space-between;gap:var(--s3)}
+.run h2{margin:0;font:500 19px/1.25 var(--ui);letter-spacing:-.02em;color:var(--text)}
+.run header p{margin:4px 0 0;font-size:13px;color:var(--muted)}
+.run h2,.run header p{transition:opacity .4s}
+.run.swap h2,.run.swap header p,.run.swap .steps{opacity:0}
+.state{display:flex;align-items:center;gap:8px;flex:none;padding:5px 12px 5px 10px;border-radius:var(--r-pill);background:var(--tone-soft);color:var(--tone);font-weight:500;font-size:12.5px;white-space:nowrap;transition:background .4s,color .4s}
+.state.ready{background:color-mix(in srgb,var(--need) 15%,transparent);color:var(--need)}
+.state.ready .dot{background:var(--need);animation:none}
+.run > .track{flex:none;height:4px;margin:18px 0 0}
+.run > .track u{transition-duration:1.1s}
+.steps{list-style:none;margin:24px 0 0;padding:0;transition:opacity .4s}
+.steps li{display:grid;grid-template-columns:18px minmax(0,1fr) auto;column-gap:10px;align-items:baseline;padding-bottom:24px;font-size:16px;line-height:1.4;letter-spacing:-.008em;color:var(--text)}
+.steps li.in{animation:rise .55s cubic-bezier(.2,.7,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(9px)}}
+.steps li > .dot{justify-self:center;transform:translateY(-2px)}
+.steps li > .dot.done{width:11px;height:6px;margin:0;border-width:2px;transform:translateY(-4px) rotate(-45deg);animation:land .45s cubic-bezier(.3,1.7,.5,1) both}
+@keyframes land{from{opacity:0;transform:translateY(-4px) rotate(-45deg) scale(.2)}}
+.steps time{color:var(--muted);font-size:12px}
+.steps .src{grid-column:2;justify-self:start;margin-top:7px;padding:3px 9px 3px 8px;font-size:12px}
+.steps li:nth-child(n+4){margin-right:calc(var(--pane-w) - var(--pane-out))}
 
 /* the pane in front: its own glass, its own shadow, lit from inside at night */
-.pane{position:absolute;z-index:2;top:44.5%;right:calc(-1 * var(--pane-out));width:var(--pane-w);padding:var(--s3);border-radius:22px;font-size:var(--t-ui);line-height:1.4;color:var(--text)}
-.pane h3{color:var(--text);font-size:13.5px;letter-spacing:-.01em;margin:6px 6px 12px}
-.card{padding:12px 12px 13px;border-radius:var(--r-ctl);background:var(--card);margin-bottom:6px}
+.pane{position:absolute;z-index:2;bottom:-26px;right:calc(-1 * var(--pane-out));width:var(--pane-w);padding:var(--s3);border-radius:22px;font-size:13.5px;line-height:1.4;color:var(--text)}
+.pane h3{display:flex;justify-content:space-between;margin:6px 6px 12px;font:500 14.5px var(--ui);letter-spacing:-.01em;color:var(--text)}
+.pane .meta{margin:-6px 6px 12px;font:400 12px var(--mono);color:var(--muted)}
+.card{padding:14px;border-radius:var(--r-ctl);background:var(--card);margin-bottom:6px;overflow:hidden;transition:max-height .55s ease,opacity .4s,margin .55s ease,padding .55s ease}
 .card:last-child{margin-bottom:0}
-.card .who{display:flex;align-items:center;gap:8px;font-size:var(--t-micro);color:var(--muted)}
-.card h5{margin:6px 0 3px;font:500 13px/1.32 var(--ui);letter-spacing:-.01em;color:var(--text)}
-.card p{margin:0;color:var(--muted)}
-.acts{display:flex;gap:6px;margin-top:11px}
-.acts button{height:30px;padding:0 12px;border-radius:var(--r-chip);border:0;font:500 12px var(--ui);cursor:pointer;background:var(--chip);color:var(--text);white-space:nowrap}
+.card.in{animation:rise .55s cubic-bezier(.2,.7,.2,1) both}
+.card.gone{max-height:0!important;opacity:0;margin-bottom:0;padding-top:0;padding-bottom:0}
+.card .who{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted)}
+.card h5{margin:7px 0 3px;font:500 14.5px/1.3 var(--ui);letter-spacing:-.012em;color:var(--text)}
+.card p{margin:0;font-size:13px;color:var(--muted)}
+.acts{display:flex;gap:6px;margin-top:12px}
+.acts button{height:32px;padding:0 14px;border-radius:var(--r-chip);border:0;font:500 13px var(--ui);cursor:pointer;background:var(--chip);color:var(--text);white-space:nowrap;transition:transform .15s,filter .15s}
 .acts .go{background:var(--accent);color:var(--accent-ink);font-weight:600;box-shadow:inset 0 1px 0 rgb(255 255 255 / .45)}
 .acts .go:hover{filter:brightness(1.07)}
-.card.done .acts{display:none}
-.card .stamp{display:none;margin-top:9px;color:var(--text);align-items:baseline;gap:8px}
+.acts .go.press{transform:scale(.95);filter:brightness(.9)}
+.card.done .acts,.card ~ .card .acts{display:none}
+.card .stamp{display:none;margin-top:10px;font-weight:500;color:var(--tone);align-items:center;gap:9px}
 .card.done .stamp{display:flex}
-.card.done .who .dot{background:transparent;width:9px;height:5px;border-radius:0;border-left:1.5px solid var(--tone);border-bottom:1.5px solid var(--tone);transform:rotate(-45deg);margin-bottom:2px}
+.card.done .who .dot{background:var(--tone)}
 
 /* the live notice: the nearest pane, over the top corner */
-.notice{position:absolute;z-index:3;top:-58px;right:calc(-1 * var(--pane-out));width:292px;padding:11px 14px 12px;border-radius:var(--r-inner);font-size:var(--t-ui);line-height:1.38;color:var(--text)}
+.notice{position:absolute;z-index:3;top:-74px;right:calc(-1 * var(--pane-out));width:304px;padding:12px 15px 13px;border-radius:var(--r-inner);font-size:13.5px;line-height:1.4;color:var(--text)}
 .notice > div{transition:opacity .45s,transform .45s}
 .notice.swap > div{opacity:0;transform:translateY(5px)}
-.notice .who{display:flex;align-items:center;gap:8px;font-weight:500;font-size:13px;color:var(--text);margin-bottom:2px}
-.notice .who span{margin-left:auto;font-weight:400;font-size:var(--t-micro);color:var(--muted)}
+.notice .who{display:flex;align-items:center;gap:9px;font-weight:500;font-size:14px;color:var(--text);margin-bottom:3px}
+.notice .who .dot{background:var(--lilac)}
+.notice .who span{margin-left:auto;font:400 12px var(--mono);color:var(--muted)}
 .notice p{margin:0;color:var(--muted)}
-/* ---------- 2. morning ---------- */
-.less{min-height:112vh;padding:15vh 0 20vh}
+
+/* ---------- 2. before dawn ---------- */
+.less{min-height:118vh;padding:17vh 0 20vh}
 .less h2{font-size:calc(var(--t-h2) * 1.12);max-width:10.6em;margin-left:-.04em}
 .less h2 .pre{font-size:.44em;font-weight:var(--c-w);letter-spacing:var(--c-track);line-height:1.12;margin:0 0 .62em .06em;color:var(--fg2)}
 
 /* ---------- 3. midday: the four jobs, a bento ---------- */
-.jobs{padding:4vh 0 34vh}
+.jobs{padding:13vh 0 34vh}
+.here{font-size:calc(var(--t-h2) * 1.12);margin:0 0 var(--s8) -.04em}
 .bento{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));grid-template-rows:minmax(372px,auto) minmax(420px,auto);gap:var(--s3)}
 .cell{position:relative;display:flex;flex-direction:column;min-width:0;padding:var(--s6);border-radius:var(--r-glass);overflow:hidden}
 .cell::before{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;background:linear-gradient(142deg,var(--glass-hi) 0%,transparent 26%);opacity:.34}
@@ -422,12 +442,12 @@ section{position:relative;color:var(--fg)}
 .c-risk .claim{margin-top:var(--s6);padding-top:0}
 .c-quest .claim{margin-top:auto;padding-top:var(--s5)}
 
-.vig{font-size:13px;line-height:1.42;color:var(--text);border-radius:var(--r-inner);background:var(--panel);box-shadow:inset 0 0 0 1px var(--line);padding:var(--s4)}
+.vig{font-size:14px;line-height:1.42;color:var(--text);border-radius:var(--r-inner);background:var(--panel);box-shadow:inset 0 0 0 1px var(--line);padding:var(--s4)}
 .vig p{margin:0}
 .vig .head{display:flex;justify-content:space-between;align-items:center;gap:var(--s3);color:var(--muted);font-size:var(--t-ui);padding-bottom:var(--s3)}
 .vig .head b{font-weight:500;color:var(--text);font-variant-numeric:tabular-nums}
 .c-evidence .vig{align-self:stretch;display:flex;flex-direction:column}
-.req{display:grid;grid-template-columns:14px 58px minmax(0,1fr) auto;align-items:center;gap:8px;height:40px;border-top:1px solid var(--line);transition:opacity .5s}
+.req{display:grid;grid-template-columns:14px 62px minmax(0,1fr) auto;align-items:center;gap:8px;height:48px;border-top:1px solid var(--line);transition:opacity .5s}
 .req em{font-style:normal;font-variant-numeric:tabular-nums;font-size:var(--t-ui)}
 .req span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .req .src{transition:opacity .5s}
@@ -449,7 +469,7 @@ section{position:relative;color:var(--fg)}
 .vig .head span + span{color:var(--info)}
 .req em{color:var(--info)}
 .c-vendor .vig{margin-top:auto;padding:var(--s3) var(--s4)}
-.tick{display:flex;gap:10px;align-items:center;padding:3px 0}
+.tick{display:flex;gap:10px;align-items:center;padding:5px 0}
 .vig .title{color:var(--muted);font-size:var(--t-ui);margin-bottom:5px}
 .c-quest .vig{margin-top:var(--s5)}
 .c-quest .a{margin-top:6px;font-size:15px;line-height:1.38;letter-spacing:-.008em}
@@ -496,7 +516,7 @@ section{position:relative;color:var(--fg)}
 .night .invite{max-width:420px}
 .note{margin:var(--s4) 6px 0;font-size:var(--t-small);line-height:1.45;color:var(--fg2);max-width:26em}
 .night .product{min-height:400px}
-.night .pane{top:0;right:0;width:300px}
+.night .pane{top:0;bottom:auto;right:0;width:324px}
 .night .invite{margin-top:var(--s6)}
 footer{display:flex;justify-content:space-between;gap:20px;padding:var(--s5) 0 var(--s8);font-size:var(--t-small);color:var(--fg2)}
 
@@ -515,20 +535,21 @@ html[data-review="off"] .review{display:none}
 .review .seg button{flex:1;height:28px;padding:0 4px;border:0;border-radius:var(--r-chip);background:transparent;font:inherit;color:var(--muted);cursor:pointer;white-space:nowrap}
 .review .seg button[aria-pressed="true"]{background:var(--card);color:var(--text);font-weight:500;box-shadow:inset 0 0 0 1px var(--line)}
 
-/* small laptops: the workspace is narrower, so the draft summary gives way */
+/* small laptops: the workspace is narrower */
 @media (min-width:1200px) and (max-width:1399px){
-  .run .memo{display:none}
+  .clock{display:none}
+  .steps time{display:none}
 }
 /* ---------- tablet ---------- */
 @media (max-width:1199px){
-  .hero > .wrap{grid-template-columns:minmax(0,1fr)}
+  .hero .wrap{grid-template-columns:minmax(0,1fr)}
+  .first{display:block;min-height:0}
   .pitch{max-width:560px}
   .hero .product{margin:92px var(--pane-out) 0 0;height:auto}
-  .ws{height:auto;grid-template-rows:48px auto}
+  .ws{height:auto;grid-template-rows:54px auto}
   .pane{top:auto;bottom:-40px}
-  .run .steps li:nth-child(n+3),.run .memo{margin-right:0}
-  .run{padding-bottom:260px}
-  .tabs span:nth-child(n+3){display:none}
+  .steps li:nth-child(n+4){margin-right:0}
+  .run{padding-bottom:250px}
   .bento{grid-template-rows:none}
   .c-evidence{grid-column:1/-1;grid-row:auto}
   .c-risk{grid-column:1/-1;grid-row:auto}
@@ -537,7 +558,7 @@ html[data-review="off"] .review{display:none}
   .c-risk .talk{margin-top:var(--s6)}
   .between{column-gap:var(--s7);padding:var(--s8) var(--s7)}
   .night .stage{grid-template-columns:minmax(0,1fr)}
-  .night .pane{position:relative;bottom:auto;width:auto;max-width:420px;margin-top:var(--s6)}
+  .night .pane{position:relative;bottom:auto;right:auto;width:auto;max-width:420px;margin-top:var(--s6)}
   .night .product{min-height:0}
 }
 /* ---------- phone ---------- */
@@ -559,21 +580,23 @@ html[data-review="off"] .review{display:none}
   .trust li{padding:0 10px}
   .trust li:last-child{flex-basis:100%;padding-left:0;border-left:0}
   .hero .product{margin:76px 0 0}
-  .notice{right:-4px;left:34px;width:auto;top:-62px}
+  .notice{right:-4px;left:34px;width:auto;top:-70px}
   .bar{gap:var(--s3);padding:0 14px}
-  .crumb,.tabs{display:none}
+  .tabs,.clock{display:none}
   .live{margin-left:auto}
   .ws{display:block}
-  .bar{height:48px}
+  .bar{height:52px}
   .rail{border-right:0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px;padding:var(--s2)}
   .rail h3{display:none}
   .agent{margin:0;min-width:0}
-  .run{padding:var(--s4) var(--s4) 44px}
-  .memo{margin-top:var(--s2)}
+  .agent .n{white-space:normal;align-items:baseline;line-height:1.25}
+  .run{padding:20px var(--s4) 40px}
+  .steps li{font-size:14.5px}
   .pane,.night .pane{position:relative;top:auto;bottom:auto;right:auto;width:auto;max-width:none;margin:-28px -6px 0 26px}
   .night .pane{margin:var(--s6) 0 0}
-  .less{min-height:104vh;padding:13vh 0 16vh}
-  .jobs{padding:2vh 0 30vh}
+  .less{min-height:108vh;padding:13vh 0 16vh}
+  .jobs{padding:9vh 0 30vh}
+  .here{margin-bottom:var(--s7)}
   .bento{display:flex;flex-direction:column}
   .cell{padding:var(--s5)}
   .c-evidence{display:flex}
@@ -640,6 +663,7 @@ footer{font-size:11px}
 <div class="garden" aria-hidden="true">
   <div class="scene" id="scene">
     <div class="inner"><picture><source media="(max-width:700px)" srcset="/versions/v5/night-sm.webp"><img src="/versions/v5/night.webp" alt=""></picture><div class="scrim"></div><div class="flies"></div></div>
+    <div class="layer"><div class="inner"><picture><source media="(max-width:700px)" srcset="predawn-sm.webp"><img src="predawn.webp" alt="" decoding="async"></picture><div class="scrim cool"></div><div class="flies"></div></div></div>
     <div class="layer"><div class="inner"><picture><source media="(max-width:700px)" srcset="/versions/v5/morning-sm.webp"><img src="/versions/v5/morning.webp" alt="" decoding="async"></picture>
       <div class="clouds">
         <div class="cloud" style="--w:62vw;--h:9vh;--y:38vh;--t:260s;--dl:-60s"></div>
@@ -679,7 +703,7 @@ footer{font-size:11px}
 <main id="top">
   <!-- 1. night -->
   <section class="hero" data-stage="0" data-light="night">
-    <div class="wrap">
+    <div class="first"><div class="wrap">
       <div class="pitch">
         <h1 class="display"><span>Freedom</span><span class="sub">from manual GRC work.</span></h1>
         <p class="lead">Domain-trained agents that do complex GRC work from day one. Use them next to any platform.</p>
@@ -697,19 +721,20 @@ footer{font-size:11px}
         </ul>
       </div>
       <div class="product" id="p-hero"></div>
-    </div>
+    </div></div>
   </section>
 
-  <!-- 2. morning -->
-  <section class="less" data-stage="1" data-light="day">
+  <!-- 2. the small hours before dawn: the problem, still in the dark -->
+  <section class="less" data-stage="1" data-light="night" data-rise>
     <div class="wrap">
       <h2 class="display"><span class="pre">GRC has been asked to do more and more.</span><span>But your team stayed the same size.</span></h2>
     </div>
   </section>
 
-  <!-- 3. midday -->
-  <section class="jobs" data-stage="2" data-light="day">
+  <!-- 3. sunrise, then the morning: the first full daylight on the page arrives with this line -->
+  <section class="jobs" data-stage="2" data-light="day" data-rise>
     <div class="wrap">
+      <h2 class="display here">Oxten is here now.</h2>
       <div class="bento">
         <article class="cell glass c-evidence">
           <div class="copy">
@@ -732,11 +757,6 @@ footer{font-size:11px}
             <div class="turn"><p class="who">VP of Infrastructure</p><p>Losing the primary region. Failover has not been tested since March.</p></div>
             <div class="turn"><p class="who"><i class="dot working" style="--d:.6s"></i>Risk agent</p><p><span id="v-risk">Who owns the failover test today?</span><span class="caret"></span></p></div>
           </div>
-          <div class="vig drafted" aria-hidden="true">
-            <p class="head"><span>Drafted from this interview</span><span>R-031</span></p>
-            <h4>Regional failover is untested</h4>
-            <dl><dt>Likelihood</dt><dd>Possible</dd><dt>Impact</dt><dd><span class="warn">Major</span>, payroll and billing</dd><dt>Owner</dt><dd>Infrastructure</dd></dl>
-          </div>
         </article>
 
         <article class="cell glass c-vendor">
@@ -745,9 +765,9 @@ footer{font-size:11px}
             <p class="num" aria-hidden="true">0<small>minutes of your time</small></p>
           </div>
           <div class="vig" aria-hidden="true">
-            <p class="tick"><i class="dot done"></i>Halvorsen Freight SOC 2 read, 84 pages</p>
-            <p class="tick"><i class="dot done"></i>Pen test checked against policy</p>
-            <p class="tick"><i class="dot need"></i>2 conditions ready for you to approve</p>
+            <p class="tick"><i class="dot done"></i>SOC 2 report read</p>
+            <p class="tick"><i class="dot done"></i>Pen test checked</p>
+            <p class="tick"><i class="dot need"></i>2 conditions for you to approve</p>
           </div>
         </article>
 
@@ -762,6 +782,10 @@ footer{font-size:11px}
         </article>
       </div>
 
+    </div>
+    <!-- midday arrives here. The marker sits outside the scaled content so its position is measured the same in every browser. -->
+    <div data-rise></div>
+    <div class="wrap">
       <div class="between glass">
         <h2 class="display">And everything in between.</h2>
         <ul class="queue">
@@ -777,7 +801,7 @@ footer{font-size:11px}
   </section>
 
   <!-- 4. dusk -->
-  <section class="keep" data-stage="3" data-light="night">
+  <section class="keep" data-stage="3" data-light="night" data-rise>
     <div class="wrap">
       <h2 class="display"><span>Keep your platform.</span><span>Add the multiplier.</span></h2>
       <p class="lead">ServiceNow, Archer, AuditBoard, OneTrust, or a spreadsheet. Oxten works next to all of them. No migration. No implementation.</p>
@@ -799,7 +823,7 @@ footer{font-size:11px}
   </section>
 
   <!-- 5. night again -->
-  <section class="night" data-stage="4" id="invite" data-light="night">
+  <section class="night" data-stage="4" id="invite" data-light="night" data-rise>
     <div class="wrap">
       <h2 class="display"><span>Your team is about to</span><span>get a lot bigger.</span></h2>
       <div class="stage">
@@ -869,71 +893,67 @@ footer{font-size:11px}
   });
   syncReview();
 
-  /* ---------- the product: a workspace, a decisions pane and a live notice ---------- */
+  /* ---------- the product: a workspace, a decisions pane and a live notice.
+     The night shift, shown plainly: one agent at a time finishes a job in three steps,
+     hands you a decision, and the one before it gets approved. ---------- */
   var NAMES = ['Audit prep agent','Risk agent','Third-party risk agent','Client questionnaire agent'];
-  var HERO = {
-    label: 'The Oxten workspace at 2 AM: four agents working on a SOC 2 audit, a live vendor review by the Third-party risk agent with cited sources, and three items that need a human decision.',
-    live: '4 agents working',
-    agents: [
-      ['Audit prep agent','Mapped 91 evidence items to auditor requests',58,68],
-      ['Risk agent','17 new risks uncovered',8,9],
-      ['Third-party risk agent','42 vendor security re-assessments done',42,47],
-      ['Client questionnaire agent','Drafted 74 answers with verified sources',74,96]
-    ],
-    active: 2,
-    id: 'VR-112', title: 'Halcyon Payroll, annual security review',
-    sub: 'Third-party risk agent. Vendor renewal is due Dec 1.',
-    state: 'Working, 8 min',
-    steps: [
-      ['2:11 AM','Read the SOC 2 Type II report, 84 pages. <span class="warn">1 exception</span> in the auditor\'s tests, a missed quarterly access review.',['Halcyon SOC 2 report, p. 41']],
-      ['2:14 AM','Checked the exception against your vendor policy. Section 4.2 allows acceptance with a follow-up.',['Vendor policy 4.2']],
-      ['2:16 AM','Confirmed Halcyon fixed the process in August and <strong>completed the Q3 review</strong>.',['Halcyon, Q3 access review','Remediation letter']]
-    ],
-    nowTime: '2:19 AM',
-    typing: ['Writing the review summary','Scoring residual risk','Scheduling the 90-day follow-up','Citing each finding to its page'],
-    memo: 'Halcyon Payroll meets 46 of 47 requirements<sup>1</sup>. One exception, remediated in August<sup>2</sup>. Recommend approval with a 90-day follow-up<sup>3</sup>.'
-  };
-  var PANES = {
-    hero: {
-      title: 'Needs your decision',
-      cards: [
-        [2,'Approve Halcyon Payroll with a 90-day follow-up?','Summary and 3 citations.','Approve','Approved. Follow-up scheduled and logged to the audit trail.'],
-        [0,'Request 37: use the October change sample?','September export is missing 4 tickets.','',''],
-        [3,'12 answers need a named owner','SIG Lite, sections H and K.','','']
-      ]
-    },
-    night: {
-      title: 'Ready for your morning',
-      cards: [
-        [0,'Send 11 evidence memos to the auditor?','All cited. 2 exceptions disclosed.','Approve and send','Approved and sent. Logged to the audit trail.'],
-        [1,'9 leader interviews written up','14 risks drafted, 3 rated high.','',''],
-        [2,'Halcyon Payroll: approve with a 90-day follow-up','Summary and 3 citations.','','']
-      ]
-    }
-  };
-  var NOTES = [
-    [0,'just now','86% of requests are done. Reaching out to owners for the rest.'],
-    [1,'just now','17 new risks uncovered. 6 findings shared with the AI Review Committee.'],
-    [2,'1 min ago','42 vendor security re-assessments done.'],
-    [3,'just now','Drafted 74 answers with verified sources.']
+  var AGENTS = [['91 evidence items mapped', 85], ['17 new risks uncovered', 72], ['42 re-assessments done', 89], ['74 answers drafted', 77]];
+  var SINCE = 'since 6:02 PM';
+  /* agent, title, three steps [text, source], the decision it hands over [question, detail, action] */
+  var RUNS = [
+    [2, 'Halcyon Payroll security review',
+      [['Read the SOC 2 report', '84 pages'], ['Found <span class="warn">1 exception</span>, already fixed', 'Report, p. 41'], ['Checked it against your vendor policy', 'Policy 4.2']],
+      ['Approve Halcyon Payroll?', '1 exception, fixed in August.', 'Approve']],
+    [0, 'Audit request 37, change approvals',
+      [['Pulled 25 change tickets', 'Jira'], ['Matched each one to a pull request', 'GitHub'], ['Packaged the evidence for the auditor', '25 files']],
+      ['Send request 37 to the auditor?', '25 tickets, all matched.', 'Approve and send']],
+    [3, 'Customer security questionnaire',
+      [['Read 96 questions', 'SIG Lite'], ['Drafted 74 answers from approved sources', '74 cited'], ['Flagged <span class="warn">12 answers</span> that need an owner', 'Sections H, K']],
+      ['Assign owners for 12 answers?', 'SIG Lite, sections H and K.', 'Assign']]
   ];
+  var NOTES = [
+    [0,'2:19 AM','86% of requests are done. Reaching out to owners for the rest.'],
+    [1,'2:17 AM','17 new risks uncovered. 6 findings shared with the AI Review Committee.'],
+    [2,'2:12 AM','42 vendor security re-assessments done.'],
+    [3,'2:08 AM','Drafted 74 answers with verified sources.']
+  ];
+  var MOON = '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M8.3 .9A5.4 5.4 0 1 0 11.1 8 4.4 4.4 0 0 1 8.3 .9Z"/></svg>';
+  function clockText(m){ return ((Math.floor(m / 60) + 11) % 12 + 1) + ':' + (m % 60 < 10 ? '0' : '') + m % 60 + ' AM'; }
 
-  function pane(d){
-    var n = d.cards.length;
+  function card(c, who, fresh){
+    var el = document.createElement('div');
+    el.className = 'card' + (fresh ? ' in' : '');
+    el.innerHTML = '<div class="who"><i class="dot need"></i>' + who + '</div><h5>' + c[0] + '</h5>' + (c[1] ? '<p>' + c[1] + '</p>' : '') +
+      (c[2] ? '<div class="acts"><button type="button" class="go">' + c[2] + '</button><button type="button">Open</button></div>' +
+        '<div class="stamp" role="status"><i class="dot done"></i>Approved. Logged to the audit trail.</div>' : '');
+    return el;
+  }
+  function pane(title, meta){
     var el = document.createElement('aside');
     el.className = 'pane glass lit';
-    el.setAttribute('aria-label', d.title);
-    el.innerHTML = '<h3>' + d.title + '<i class="count">' + n + '</i></h3>' +
-      d.cards.map(function(c){
-        return '<div class="card"><div class="who"><i class="dot need"></i>' + NAMES[c[0]] + '</div><h5>' + c[1] + '</h5><p>' + c[2] + '</p>' +
-          (c[3] ? '<div class="acts"><button type="button" class="' + (c[4] ? 'go' : '') + '">' + c[3] + '</button><button type="button">Open</button></div>' : '') +
-          (c[4] ? '<div class="stamp" role="status">' + c[4] + '</div>' : '') + '</div>';
-      }).join('');
-    var go = el.querySelector('.go');
-    go.addEventListener('click', function(){
-      go.closest('.card').classList.add('done');
-      all('.count', el.parentNode).forEach(function(c){ c.textContent = n - 1; });
-    });
+    el.setAttribute('aria-label', title);
+    el.innerHTML = '<h3>' + title + '<i class="count"></i></h3>' + (meta ? '<p class="meta">' + meta + '</p>' : '');
+    function count(){
+      var n = all('.card:not(.done):not(.gone)', el).length;
+      all('.count', el.parentNode || el).forEach(function(c){ c.textContent = n; });
+    }
+    el.add = function(c, who, fresh){ el.appendChild(card(c, who, fresh)); count(); };
+    el.approve = function(c){
+      if (!c || c.classList.contains('done')) return;
+      c.classList.add('done'); count();
+    };
+    /* the demo approves the oldest open decision, then lets it fold away */
+    el.approveOldest = function(){
+      var c = el.querySelector('.card:not(.gone)'); if (!c) return;
+      var go = c.querySelector('.go');
+      if (go && !c.classList.contains('done')){ go.classList.add('press'); setTimeout(function(){ el.approve(c); }, 320); }
+      setTimeout(function(){
+        c.style.maxHeight = c.offsetHeight + 'px'; c.offsetHeight; c.classList.add('gone');
+        setTimeout(function(){ c.remove(); count(); }, 620);
+      }, 2300);
+    };
+    el.addEventListener('click', function(e){ var go = e.target.closest('.go'); if (go) el.approve(go.closest('.card')); });
+    el.count = count;
     return el;
   }
 
@@ -946,70 +966,98 @@ footer{font-size:11px}
     if (!reduce) setInterval(function(){
       el.classList.add('swap');
       setTimeout(function(){ i = (i + 1) % NOTES.length; fill(); el.offsetWidth; el.classList.remove('swap'); }, 460);
-    }, 5200);
+    }, 6200);
     return el;
   }
 
-  function workspace(d, n){
+  function workspace(decisions){
     var el = document.createElement('div');
     el.className = 'ws';
     el.setAttribute('role', 'group');
-    el.setAttribute('aria-label', d.label);
+    el.setAttribute('aria-label', 'The Oxten workspace at 2 AM. Four agents have been working since the evening. One is finishing a vendor security review, and two items are waiting for a human decision.');
     el.innerHTML =
-      '<div class="bar"><b class="wordmark">Oxten</b><span class="crumb">SOC 2 Type II, FY26 fieldwork</span>' +
-      '<div class="tabs"><span class="on">Work</span><span>Decisions<i class="count">' + n + '</i></span><span>Sources</span></div>' +
-      '<span class="live"><i class="dot working"></i>' + d.live + '</span></div>' +
-      '<div class="rail"><h3>Agents</h3>' +
-      d.agents.map(function(a, i){
-        return '<div class="agent' + (i === d.active ? ' on' : '') + '" style="--p:' + (a[2] / a[3] * 100).toFixed(1) + '%">' +
-          '<div class="n"><i class="dot working" style="--d:' + (i * .6) + 's"></i>' + a[0] + '</div><div class="t">' + a[1] + '</div>' +
-          '<div class="meter"><span class="track"><u></u></span><span><span class="num-v">' + a[2] + '</span> of ' + a[3] + '</span></div></div>';
+      '<div class="bar"><b class="wordmark">Oxten</b>' +
+      '<div class="tabs"><span class="on">Overnight</span><span>Decisions<i class="count"></i></span></div>' +
+      '<span class="live"><i class="dot working"></i>4 agents working <em>' + SINCE + '</em></span>' +
+      '<span class="clock">' + MOON + '2:19 AM</span></div>' +
+      '<div class="rail">' + AGENTS.map(function(a, i){
+        return '<div class="agent" style="--p:' + a[1] + '%"><div class="n"><i class="dot working" style="--d:' + (i * .6) + 's"></i>' + NAMES[i] + '</div><div class="t">' + a[0] + '</div><span class="track"><u></u></span></div>';
       }).join('') + '</div>' +
-      '<div class="run"><header><div><h2><em>' + d.id + '</em>' + d.title + '</h2><p>' + d.sub + '</p></div><span class="state"><i class="dot working"></i>' + d.state + '</span></header>' +
-      '<ol class="steps">' + d.steps.map(function(s){
-        return '<li><i class="dot done"></i><time>' + s[0] + '</time>' + s[1] + '<br>' + s[2].map(function(c){ return '<span class="src">' + c + '</span>'; }).join('') + '</li>';
-      }).join('') +
-      '<li class="now"><i class="dot working"></i><time>' + d.nowTime + '</time><span class="typing">' + d.typing[0] + '</span><span class="caret"></span></li></ol>' +
-      '<div class="memo"><h4>Draft summary</h4><p>' + d.memo + '</p></div></div>';
-    if (reduce) return el;
+      '<div class="run"><header><div><h2></h2><p></p></div><span class="state"><i class="dot working"></i><b></b></span></header>' +
+      '<span class="track" style="--p:0%"><u></u></span><ol class="steps"></ol></div>';
 
-    /* agents visibly working: a typed line, counters that move, a row that lights when a step lands */
-    var typing = el.querySelector('.typing'), li = 0;
-    function type(){
-      var s = d.typing[li = (li + 1) % d.typing.length], i = 0;
-      typing.textContent = '';
-      (function tick(){ typing.textContent = s.slice(0, ++i); if (i < s.length) setTimeout(tick, 26); else setTimeout(type, 2600); })();
+    var run = el.querySelector('.run'), h2 = run.querySelector('h2'), sub = run.querySelector('header p');
+    var state = run.querySelector('.state'), stateText = state.querySelector('b'), bar = run.querySelector('.track');
+    var steps = run.querySelector('.steps'), rows = all('.agent', el), level = AGENTS.map(function(a){ return a[1]; });
+    var ri = 0, mins = 131;
+
+    function head(r){
+      h2.textContent = r[1]; sub.textContent = NAMES[r[0]];
+      state.classList.remove('ready'); stateText.textContent = 'Working';
+      rows.forEach(function(row, i){ row.classList.toggle('on', i === r[0]); });
     }
-    setTimeout(type, 2600);
-    var rows = all('.agent', el), counts = d.agents.map(function(a){ return a[2]; });
-    setInterval(function(){
-      var i = Math.floor(Math.random() * 4);
-      if (counts[i] >= d.agents[i][3] - 1) i = 3;
-      if (counts[i] >= d.agents[i][3] - 1) return;
-      counts[i]++;
-      var r = rows[i];
-      r.querySelector('.num-v').textContent = counts[i];
-      r.style.setProperty('--p', (counts[i] / d.agents[i][3] * 100).toFixed(1) + '%');
-      r.classList.add('flash');
-      setTimeout(function(){ r.classList.remove('flash'); }, 500);
-    }, 2300);
+    function add(r, i, done, fresh){
+      var li = document.createElement('li');
+      if (fresh) li.className = 'in';
+      li.innerHTML = '<i class="dot ' + (done ? 'done' : 'working') + '"></i><span>' + r[2][i][0] + '</span><time>' + clockText(mins) + '</time><span class="src">' + r[2][i][1] + '</span>';
+      steps.appendChild(li); mins += 2 + i;
+      return li;
+    }
+    function land(r, li, i){
+      li.firstChild.className = 'dot done';
+      bar.style.setProperty('--p', ((i + 1) / 3 * 100).toFixed(0) + '%');
+      level[r[0]] = Math.min(97, level[r[0]] + 1);
+      rows[r[0]].style.setProperty('--p', level[r[0]] + '%');
+    }
+    function work(r, i){
+      if (i === 3) return finish(r);
+      var li = add(r, i, false, true);
+      setTimeout(function(){ land(r, li, i); setTimeout(function(){ work(r, i + 1); }, 800); }, 1900);
+    }
+    function finish(r){
+      state.classList.add('ready'); stateText.textContent = 'Ready for you';
+      decisions.approveOldest();
+      setTimeout(function(){ decisions.add(r[3], NAMES[r[0]], true); }, 3100);
+      setTimeout(function(){
+        run.classList.add('swap');
+        setTimeout(function(){
+          ri = (ri + 1) % RUNS.length; if (ri === 0) mins = 131;
+          steps.innerHTML = ''; bar.style.setProperty('--p', '0%'); head(RUNS[ri]);
+          run.classList.remove('swap'); work(RUNS[ri], 0);
+        }, 450);
+      }, 5600);
+    }
+
+    /* open mid-job: two steps done, the third in progress */
+    var first = RUNS[0];
+    head(first);
+    var a = add(first, 0, true), b = add(first, 1, true), c = add(first, 2, false);
+    bar.style.setProperty('--p', '67%');
+    if (!reduce) setTimeout(function(){ land(first, c, 2); setTimeout(function(){ finish(first); }, 900); }, 3200);
     return el;
   }
-  var pHero = $('p-hero');
-  pHero.appendChild(workspace(HERO, PANES.hero.cards.length));
-  pHero.appendChild(pane(PANES.hero));
+
+  var pHero = $('p-hero'), decisions = pane('Needs your decision');
+  pHero.appendChild(workspace(decisions));
+  pHero.appendChild(decisions);
   pHero.appendChild(notice());
-  $('p-night').appendChild(pane(PANES.night));
+  decisions.add(RUNS[1][3], NAMES[0]);
+  decisions.add(RUNS[2][3], NAMES[3]);
+
+  var morning = pane('Ready for your morning', '4 agents, working ' + SINCE);
+  $('p-night').appendChild(morning);
+  morning.add(['11 evidence memos, ready to send', '', 'Approve and send'], NAMES[0]);
+  morning.add(['17 new risks, 3 rated high', '', ''], NAMES[1]);
+  morning.add(['42 vendor re-assessments, done', '', ''], NAMES[2]);
 
   /* ---------- bento: the evidence request list, being worked ---------- */
   var REQ = [
     ['PBC-041','Q3 user access review','Okta export'],
     ['PBC-042','Change approvals','25 Jira tickets'],
     ['PBC-043','Backup restore test','Runbook DR-7'],
-    ['PBC-044','Terminated user access','Workday report'],
-    ['PBC-045','Encryption at rest','KMS key policy']
+    ['PBC-044','Terminated user access','Workday report']
   ];
-  var vE = $('v-evidence'), at = 3;
+  var vE = $('v-evidence'), at = 2;
   vE.innerHTML = '<p class="head"><span>Audit request list</span><b><span id="v-n">44</span> of 68 mapped</b></p>' +
     REQ.map(function(r){ return '<div class="req"><i class="dot"></i><em>' + r[0] + '</em><span>' + r[1] + '</span><span class="src">' + r[2] + '</span></div>'; }).join('') +
     '<p class="foot"><span class="track" style="--p:64.7%"><u></u></span><span>Started 4 min ago</span></p>';
@@ -1078,10 +1126,11 @@ footer{font-size:11px}
   var nav = document.querySelector('.nav'), scene = $('scene'), sun = $('sun');
   var layers = all('.layer').map(function(l){ return [l, l.firstElementChild]; });
   var sunmark = $('sunmark'), moonmark = $('moonmark'), clock = $('clock');
-  var sections = all('[data-stage]'), tops = [], vh = 0, vw = 0, F = 0, BLEED = 14;
+  var anchors = all('[data-rise]'), A = [], vh = 0, vw = 0, F = 0, BLEED = 14;
   var ws = document.querySelector('.ws'), note = document.querySelector('.notice');
   /* [element, scroll drift, pointer x px, pointer y px, tilt] */
   var floats = [[ws, 0, 7, 5, 1], [all('.pane')[0], .06, 16, 11, 1.5], [note, .04, 26, 17, 2], [all('.pane')[1], .06, 14, 10, 1.5]];
+  var base = scene.firstElementChild, lastBase = null, firstScreen = document.querySelector('.first'), lastSection = document.querySelector('.night');
   var mids = [], lastY = -1, lastB = [], lastK = -1, scrolled = null, queued = false;
   var px = 0, py = 0, tx = 0, ty = 0, desk = false;
 
@@ -1090,14 +1139,17 @@ footer{font-size:11px}
   function lerp(a, b, t){ return a + (b - a) * t; }
   function measure(){
     vh = innerHeight; vw = innerWidth; desk = vw >= 1200;
+    /* large screens: scale the content with the viewport so the composition holds */
+    root.style.setProperty('--z', (desk ? Math.max(.8, Math.min(vw / 1440, vh / 900, 2.6)) : 1).toFixed(4));
     F = layers[0][0].offsetHeight - layers[0][1].offsetHeight;
-    floats.forEach(function(f){ f[0].style.transform = ''; });
-    tops = sections.map(function(s){ return s.getBoundingClientRect().top + scrollY; });
-    mids = floats.map(function(f){ var r = f[0].getBoundingClientRect(); return r.top + scrollY + r.height / 2; });
-    lastY = -1; lastB = []; frame();
+    A = anchors.map(function(s){ return s.getBoundingClientRect().top + scrollY; });
+    /* measured on unscaled ancestors: the first screen for the hero panes, the last section for the finale pane */
+    var fr = firstScreen.getBoundingClientRect(), nr = lastSection.getBoundingClientRect();
+    mids = [fr.top + scrollY + fr.height * .5, fr.top + scrollY + fr.height * .62, fr.top + scrollY + fr.height * .2, nr.top + scrollY + nr.height * .6];
+    lastY = -1; lastB = []; lastBase = null; frame();
   }
-  /* minutes after midnight at each stage: 2:19 AM, 7:06 AM, 1:00 PM, 7:40 PM, 2:19 AM */
-  var MIN = [139, 426, 780, 1180, 1579];
+  /* minutes after midnight as each light arrives: 2:19 AM night, 4:40 AM before dawn, 6:50 AM sunrise, 12:30 PM midday, 7:40 PM dusk, 2:19 AM night */
+  var MIN = [139, 280, 410, 750, 1180, 1579];
   var AX = 26, AY = 21, RX = 23, RY = 17;
   function onArc(node, t){
     var th = Math.PI * (1 - t);
@@ -1130,34 +1182,47 @@ footer{font-size:11px}
     }
     if (!moved || reduce) return;
 
-    /* the light: layer i is fully in at the top of section i, and fades in over the band F above it */
-    var s = 0;
+    /* the light: layer j is fully in at the top of its anchor, and fades in over the band F above it.
+       0 night, 1 before dawn (the problem), 2 sunrise (Oxten is here now), 3 midday, 4 dusk, 5 night */
+    var s = 0, rise = 0, Bs = [];
     for (var j = 0; j < layers.length; j++){
-      var top = tops[j + 1] - y, B = Math.max(-F, Math.min(vh + 40, top - F)) + BLEED;
-      s += clamp((vh - (top - F)) / (vh + F));
-      if (B === lastB[j]) continue;
-      lastB[j] = B;
+      var top = A[j] - y, p = clamp((vh - (top - F)) / (vh + F));
+      Bs[j] = Math.max(-F, Math.min(vh + 40, top - F)) + BLEED;
+      s += p; if (j === 1) rise = p;
+    }
+    /* only the lights in play are painted: one not yet risen, or fully covered by the next, is switched off */
+    for (j = 0; j < layers.length; j++){
+      var B = Bs[j], on = B < vh + BLEED && !(j < layers.length - 1 && Bs[j + 1] <= BLEED - F);
+      var key = on ? B : 'off';
+      if (key === lastB[j]) continue;
+      lastB[j] = key;
+      layers[j][0].style.visibility = on ? '' : 'hidden';
+      if (!on) continue;
       layers[j][0].style.transform = 'translate3d(0,' + B.toFixed(1) + 'px,0)';
       layers[j][1].style.transform = 'translate3d(0,' + (-B).toFixed(1) + 'px,0)';
     }
+    var baseOn = Bs[0] > BLEED - F;
+    if (baseOn !== lastBase){ lastBase = baseOn; base.style.visibility = baseOn ? '' : 'hidden'; }
 
-    /* the sun rises behind the pavilion, crosses the sky, sets where it rose */
-    var a = clamp((s - .5) / 2.5), sx = lerp(.3, .42, a), sy = .62 - Math.sin(a * Math.PI) * .74;
+    /* the sun comes up behind the pavilion with the sunrise band, brightest as it clears the horizon, then crosses the sky and sets */
+    var a = clamp((s - 2) / 2), up = ease(rise), sx = lerp(.3, .44, a);
+    var sy = s < 2 ? lerp(.86, .3, up) : lerp(.3, .64, a) - Math.sin(a * Math.PI) * .42;
     sun.style.transform = 'translate3d(' + (sx * vw).toFixed(1) + 'px,' + (sy * vh).toFixed(1) + 'px,0)';
-    sun.style.opacity = (.8 * clamp((s - .7) / .4) * clamp(3.3 - s) * (1 - .35 * Math.sin(a * Math.PI))).toFixed(3);
+    sun.style.opacity = (ease(rise * 1.5) * (.72 + .28 * Math.sin(rise * Math.PI)) * clamp(4.25 - s) * (1 - .3 * Math.sin(a * Math.PI))).toFixed(3);
 
-    /* the nav follows the sky above it: paper to ink while the dawn band passes it, ink to paper at dusk */
+    /* the nav follows the sky above it: paper to ink while the sunrise passes it, ink to paper at dusk */
     var at = y + 36;
-    var k = ease((at - (tops[1] - F * .6)) / (F * .12)) - ease((at - (tops[3] - F * .62)) / (F * .12));
+    var k = ease((at - (A[1] - F * .6)) / (F * .12)) - ease((at - (A[3] - F * .62)) / (F * .12));
     k = Math.round(k * 100);
     if (k !== lastK){ lastK = k; nav.style.setProperty('--k', k + '%'); }
 
-    /* indicator: the moon finishes its arc, the sun makes one, the moon starts again */
-    onArc(sunmark, a);
-    sunmark.setAttribute('opacity', (clamp((s - .5) / .2) * clamp((3.05 - s) / .2)).toFixed(2));
-    onArc(moonmark, s < 1 ? lerp(.62, 1, clamp(s / .5)) : lerp(0, .62, clamp(s - 3)));
-    moonmark.setAttribute('opacity', Math.max(clamp((.5 - s) / .2), clamp((s - 3.1) / .2)).toFixed(2));
-    var si = Math.min(Math.floor(s), 3), mins = Math.round(lerp(MIN[si], MIN[si + 1], s - si)) % 1440;
+    /* indicator: the moon finishes its arc, the sun makes one from sunrise to dusk, the moon starts again */
+    var d = clamp((s - 1.55) / 2.5);
+    onArc(sunmark, d);
+    sunmark.setAttribute('opacity', (clamp((s - 1.55) / .2) * clamp((4.05 - s) / .2)).toFixed(2));
+    onArc(moonmark, s < 2 ? lerp(.62, 1, clamp(s / 1.55)) : lerp(0, .62, clamp(s - 4)));
+    moonmark.setAttribute('opacity', Math.max(clamp((1.55 - s) / .2), clamp((s - 4.1) / .2)).toFixed(2));
+    var si = Math.min(Math.floor(s), 4), mins = Math.round(lerp(MIN[si], MIN[si + 1], s - si)) % 1440;
     var h = Math.floor(mins / 60), m = mins % 60;
     var label = ((h + 11) % 12 + 1) + ':' + (m < 10 ? '0' : '') + m + (h < 12 ? ' AM' : ' PM');
     if (clock.textContent !== label) clock.textContent = label;
