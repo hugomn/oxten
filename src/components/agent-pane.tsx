@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 const feeds = [
   {
-    title: "OXTEN / AGENT ACTIVITY",
+    title: "Agent activity",
     label: "4 agents running",
     rows: [
       ["Evidence agent", "Mapped 42 requests to existing evidence", "42 / 42 matched"],
@@ -12,7 +12,7 @@ const feeds = [
     ],
   },
   {
-    title: "OXTEN / EVIDENCE AGENT",
+    title: "Evidence agent",
     label: "Evidence agent running",
     rows: [
       ["Auditor request 001", "Access control policy", "Matched · access_control.pdf"],
@@ -22,7 +22,7 @@ const feeds = [
     ],
   },
   {
-    title: "OXTEN / RISK AGENT",
+    title: "Risk agent",
     label: "Risk agent running",
     rows: [
       ["Risk agent", "What are your team's critical dependencies?", "Interview · Operations"],
@@ -32,7 +32,7 @@ const feeds = [
     ],
   },
   {
-    title: "OXTEN / THIRD-PARTY AGENT",
+    title: "Third-party agent",
     label: "Third-party agent running",
     rows: [
       ["Vendor questionnaire", "Security review initiated", "Questionnaire sent"],
@@ -42,7 +42,7 @@ const feeds = [
     ],
   },
   {
-    title: "OXTEN / QUESTIONNAIRE AGENT",
+    title: "Questionnaire agent",
     label: "Questionnaire agent running",
     rows: [
       ["Customer question", "Is customer data encrypted at rest?", "Answer drafted"],
@@ -84,7 +84,6 @@ export function AgentPane({ kind = 0 }: { kind?: number }) {
     >
       <div className="pane-top">
         <span>{feed.title}</span>
-        <span className="pane-window">···</span>
       </div>
       <div className="pane-status">
         <span className="live-dot" />
@@ -96,7 +95,6 @@ export function AgentPane({ kind = 0 }: { kind?: number }) {
           <div className={`feed-row ${tick % 4 === i ? "feed-current" : ""}`} key={`${kind}-${i}`}>
             <div className="feed-meta">
               <span>{title}</span>
-              <span>0{i + 1}</span>
             </div>
             <p>{text}</p>
             <div className="feed-result">
@@ -108,12 +106,6 @@ export function AgentPane({ kind = 0 }: { kind?: number }) {
       </div>
       <div className="pane-bottom">
         <span>Illustrative, sample data</span>
-        <span className="pane-signal">
-          <i />
-          <i />
-          <i />
-          <i />
-        </span>
       </div>
     </div>
   );

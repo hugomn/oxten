@@ -119,7 +119,36 @@ function Index() {
           gsap.set(".growth-circle", { attr: { r: 0 } });
           const camera = root.current?.querySelector(".garden-camera");
           const mobile = window.innerWidth <= 760;
-          const cameras: [number, number, number, number][] = [
+          // Desktop cameras are [image x, image y, zoom, rotation]: the point of the painting
+          // held at the garden anchor, right of the text column. The last one is explicit.
+          const anchorX = 1176;
+          const anchorY = 600;
+          const focus: [number, number, number, number][] = [
+            [468, 914, 1.25, -6],
+            [465, 668, 1.31, -3],
+            [495, 806, 1.2, 0],
+            [426, 592, 1.32, -2],
+            [540, 583, 1.32, 2],
+            [438, 979, 1.23, -2],
+            [533, 988, 1.23, 2],
+            [481, 987, 0.87, -1],
+            [492, 960, 0.8, 0],
+            [499, 960, 0.74, 0],
+          ];
+          const desktopCameras: [number, number, number, number][] = [
+            ...focus.map(
+              ([ix, iy, zoom, rotate]) =>
+                [anchorX - zoom * (ix - 512), anchorY - zoom * (iy - 960), zoom, rotate] as [
+                  number,
+                  number,
+                  number,
+                  number,
+                ],
+            ),
+            // Finale: the garden turns to lie across the full width of the screen.
+            [512, 893, 0.85, 90],
+          ];
+          const mobileCameras: [number, number, number, number][] = [
             [560, 650, 1.08, -5],
             [565, 930, 1.13, -3],
             [530, 760, 1.04, 0],
@@ -128,10 +157,11 @@ function Index() {
             [590, 580, 1.06, -2],
             [490, 570, 1.06, 2],
             [535, 580, 0.75, -1],
-            [525, 600, mobile ? 0.49 : 0.65, 0],
-            [520, 600, mobile ? 0.41 : 0.6, 0],
-            [512, 600, mobile ? 0.33 : 0.56, 0],
+            [525, 600, 0.6, 0],
+            [520, 600, 0.56, 0],
+            [512, 600, 0.52, 0],
           ];
+          const cameras = mobile ? mobileCameras : desktopCameras;
           const first = cameras[0];
           if (camera && first)
             gsap.set(camera, {
@@ -168,9 +198,6 @@ function Index() {
                 },
                 at - 0.3,
               );
-            const pane = current.querySelector(".pane-position");
-            if (pane)
-              tl.fromTo(pane, { y: 12 }, { y: 0, duration: 0.8, ease: "sine.out" }, at + 0.29);
           });
           // Start lush. Only reveal the bare painting as the untended-work moment arrives.
           tl.to(".hero-lush", { opacity: 0, duration: 0.45 }, 0.48);
@@ -227,6 +254,15 @@ function Index() {
         <header className="brand-header">
           <span className="wordmark">OXTEN</span>
           <span className="brand-note">Backed by Google Ventures. Invite only.</span>
+          <button
+            type="button"
+            className="header-invite"
+            onClick={() => {
+              window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "smooth" });
+            }}
+          >
+            Request an invite
+          </button>
         </header>
         <div className="progress-track" aria-hidden="true">
           <div className="progress-fill" />
@@ -348,8 +384,8 @@ function Index() {
               We're opening the doors to a small group of GRC, security, and AI leaders.
             </p>
             {form(true)}
+            <footer>From the team behind Complyance. © 2026 Oxten</footer>
           </div>
-          <footer>From the team behind Complyance. © 2026 Oxten</footer>
         </section>
       </div>
       <VariantSwitcher />

@@ -91,7 +91,7 @@ export const Garden = memo(function Garden() {
             </g>
           ))}
         </defs>
-        <g className="garden-camera" transform="translate(560 650) rotate(-5) scale(1.08)">
+        <g className="garden-camera" transform="translate(1231 657.5) rotate(-6) scale(1.25)">
           <g transform="translate(-512 -960)" mask="url(#painted-paper-edge)">
             <image href={bareGarden} width="1024" height="1920" />
             {beds.map((_, i) => (

@@ -1,20 +1,23 @@
 import { useEffect, useState } from "react";
 
 const groups = {
-  type: ["bebas", "bricolage", "instrument"],
-  palette: ["vanilla", "paper", "glasshouse", "sage"],
+  type: ["instrument", "bricolage", "bebas"],
+  palette: ["glasshouse", "sage", "paper", "vanilla"],
 } as const;
 
 type Group = keyof typeof groups;
 
 // Review tool for comparing design variants. Remove before launch.
 export function VariantSwitcher() {
-  const [state, setState] = useState<Record<Group, string>>({ type: "bebas", palette: "vanilla" });
+  const [state, setState] = useState<Record<Group, string>>({
+    type: "instrument",
+    palette: "glasshouse",
+  });
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const next = { ...state };
     (Object.keys(groups) as Group[]).forEach((group) => {
-      const value = params.get(group) ?? window.localStorage.getItem(`oxten-${group}`);
+      const value = params.get(group) ?? window.localStorage.getItem(`oxten-v2-${group}`);
       if (value && (groups[group] as readonly string[]).includes(value)) next[group] = value;
     });
     setState(next);
@@ -23,7 +26,7 @@ export function VariantSwitcher() {
   useEffect(() => {
     (Object.keys(groups) as Group[]).forEach((group) => {
       document.documentElement.dataset[group] = state[group];
-      window.localStorage.setItem(`oxten-${group}`, state[group]);
+      window.localStorage.setItem(`oxten-v2-${group}`, state[group]);
     });
   }, [state]);
   return (

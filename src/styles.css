@@ -772,8 +772,29 @@
   }
 }
 
-/* ---- Design variants: type and palette are switched with data attributes on <html> ---- */
+/* ---- Design variants. Default is Instrument Sans on the glasshouse palette.
+   The others are kept as references and can be selected with the review switcher. ---- */
 :root {
+  --display: "Instrument Sans", sans-serif;
+  --body: "Instrument Sans", sans-serif;
+  --ui: "Instrument Sans", sans-serif;
+  --display-scale: 0.84;
+  --display-weight: 600;
+  --display-stretch: 75%;
+  --display-tracking: -0.022em;
+  --display-transform: none;
+  --display-leading: 0.95;
+  --body-weight: 400;
+  --body-tracking: -0.012em;
+  --body-adjust: 0.44;
+  --background: #edf1e7;
+  --foreground: #16302a;
+  --secondary: #3f5a3a;
+  --glass: #dcebec;
+  --glass-ink: #16302a;
+  --glass-muted: #4c645e;
+}
+html[data-type="bebas"] {
   --display: "Bebas Neue", sans-serif;
   --body: "Alegreya Sans", sans-serif;
   --ui: "IBM Plex Mono", monospace;
@@ -795,25 +816,32 @@ html[data-type="bricolage"] {
   --display-weight: 650;
   --display-stretch: 75%;
   --display-tracking: -0.015em;
-  --display-transform: none;
   --display-leading: 0.92;
-  --body-weight: 400;
   --body-tracking: -0.01em;
-  --body-adjust: 0.44;
 }
-html[data-type="instrument"] {
-  --display: "Instrument Sans", sans-serif;
-  --body: "Instrument Sans", sans-serif;
-  --ui: "Instrument Sans", sans-serif;
-  --display-scale: 0.84;
-  --display-weight: 600;
-  --display-stretch: 75%;
-  --display-tracking: -0.022em;
-  --display-transform: none;
-  --display-leading: 0.95;
-  --body-weight: 400;
-  --body-tracking: -0.012em;
-  --body-adjust: 0.44;
+html[data-palette="vanilla"] {
+  --background: oklch(0.9448211 0.0291045 102.6997);
+  --foreground: oklch(0.3106016 0.0498911 126.1936);
+  --secondary: oklch(0.4247072 0.0740411 111.18493);
+  --glass: oklch(0.976 0.012 184);
+  --glass-ink: oklch(0.29 0.032 148);
+  --glass-muted: oklch(0.47 0.036 148);
+}
+html[data-palette="paper"] {
+  --background: #efe9d0;
+  --foreground: #26381f;
+  --secondary: #55662e;
+  --glass: #e3eeec;
+  --glass-ink: #22331f;
+  --glass-muted: #55664f;
+}
+html[data-palette="sage"] {
+  --background: #e2e8d2;
+  --foreground: #1f3320;
+  --secondary: #4a5e2c;
+  --glass: #eef3ea;
+  --glass-ink: #1f3320;
+  --glass-muted: #52654a;
 }
 .wordmark,
 .hero-moment h1,
@@ -838,29 +866,203 @@ html[data-type="instrument"] {
 .big-number {
   font-variant-numeric: tabular-nums;
 }
-html[data-palette="paper"] {
-  --background: #efe9d0;
-  --foreground: #26381f;
-  --secondary: #55662e;
-  --glass: #e3eeec;
-  --glass-ink: #22331f;
-  --glass-muted: #55664f;
+
+/* ---- Composition: the garden fills the viewport, text sits on the page beside it ---- */
+.garden-stage {
+  inset: 0;
 }
-html[data-palette="glasshouse"] {
-  --background: #edf1e7;
-  --foreground: #16302a;
-  --secondary: #3f5a3a;
-  --glass: #dcebec;
-  --glass-ink: #16302a;
-  --glass-muted: #4c645e;
+.moment-copy {
+  width: 46%;
+  max-width: 640px;
 }
-html[data-palette="sage"] {
-  --background: #e2e8d2;
-  --foreground: #1f3320;
-  --secondary: #4a5e2c;
-  --glass: #eef3ea;
-  --glass-ink: #1f3320;
-  --glass-muted: #52654a;
+.hero-moment .moment-copy {
+  max-width: 760px;
+}
+.hero-moment h1,
+.hero-moment h1 .hero-secondary {
+  --fs: 92px;
+  margin-top: 0;
+}
+.header-invite {
+  margin-left: auto;
+  margin-right: 34px;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 3px;
+  border: 1px solid var(--foreground);
+  background: var(--background);
+  color: var(--foreground);
+  font: 500 15px/1 var(--body);
+  cursor: pointer;
+}
+.header-invite:hover {
+  background: var(--foreground);
+  color: var(--background);
+}
+.header-invite:focus-visible,
+.invite-button:focus-visible,
+.form-controls input:focus-visible {
+  outline: 2px solid var(--foreground);
+  outline-offset: 2px;
+}
+.pane-position {
+  left: 52%;
+  right: auto;
+  width: 29%;
+  max-width: 430px;
+  top: 54%;
+  transform: none;
+  translate: 0 -50%;
+}
+.agent-pane {
+  font-size: 13px;
+  border-radius: 12px;
+  --glass-surface: color-mix(in oklab, var(--glass) 86%, transparent);
+}
+.pane-top {
+  font-size: 12px;
+  padding: 16px 20px;
+  font-weight: 600;
+}
+.pane-status {
+  font-size: 13px;
+  padding: 14px 20px;
+}
+.feed-rows {
+  padding: 0 20px;
+}
+.feed-row {
+  padding: 13px 0;
+}
+.feed-meta {
+  font-size: 12px;
+}
+.feed-row p {
+  font-size: 15px;
+  line-height: 1.35;
+  margin: 4px 0 6px;
+}
+.feed-result {
+  font-size: 12px;
+}
+.pane-bottom {
+  font-size: 11px;
+  padding: 12px 20px;
+}
+.final-moment footer {
+  position: static;
+  margin-top: 18px;
+}
+@media (min-width: 761px) {
+  .final-moment {
+    align-items: flex-start;
+    justify-content: center;
+    text-align: center;
+    padding-top: 13vh;
+  }
+  .final-moment .moment-copy {
+    width: auto;
+    max-width: none;
+  }
+  .final-moment .final-heading {
+    --fs: min(8.4vh, 5.6vw);
+    max-width: none;
+    margin-bottom: 1.2vh;
+  }
+  .final-moment .statement {
+    font-size: min(2.9vh, 26px);
+    max-width: none;
+    margin: 0 0 2.2vh;
+  }
+  .final-moment .invite-form {
+    margin: 0 auto;
+  }
+}
+@media (min-width: 1500px) {
+  .hero-moment h1,
+  .hero-moment h1 .hero-secondary {
+    --fs: 112px;
+  }
+  .hero-moment .moment-copy {
+    max-width: 900px;
+  }
+  .pane-position {
+    left: 53%;
+    right: auto;
+    width: 27%;
+  }
+}
+@media (max-width: 1100px) and (min-width: 761px) {
+  .hero-moment h1,
+  .hero-moment h1 .hero-secondary {
+    --fs: 70px;
+  }
+  .pane-position {
+    left: 54%;
+    right: auto;
+    width: 36%;
+  }
+}
+@media (max-width: 760px) {
+  .garden-stage {
+    left: -28%;
+    right: -34%;
+    top: 39%;
+    bottom: -6%;
+  }
+  .moment-copy,
+  .hero-moment .moment-copy {
+    width: 100%;
+    max-width: none;
+  }
+  .hero-moment h1,
+  .hero-moment h1 .hero-secondary {
+    --fs: 50px;
+  }
+  .hero-moment h1 > span {
+    white-space: normal;
+    text-wrap: balance;
+  }
+  .header-invite {
+    display: none;
+  }
+  .pane-position {
+    left: 8%;
+    right: 8%;
+    width: auto;
+    max-width: none;
+    top: auto;
+    bottom: 3.5%;
+    translate: none;
+  }
+  .agent-pane {
+    font-size: 11px;
+  }
+  .feed-row p {
+    font-size: 12px;
+    margin: 2px 0 3px;
+  }
+  .feed-meta,
+  .feed-result,
+  .pane-top,
+  .pane-status {
+    font-size: 10px;
+  }
+  .pane-top,
+  .pane-status,
+  .pane-bottom {
+    padding: 8px 14px;
+  }
+  .feed-rows {
+    padding: 0 14px;
+  }
+  .feed-row {
+    padding: 6px 0;
+  }
+  .feed-row:nth-child(n + 4),
+  .pane-top {
+    display: none;
+  }
 }
 .variant-switcher {
   position: fixed;
@@ -873,7 +1075,9 @@ html[data-palette="sage"] {
   background: #111;
   color: #eee;
   border-radius: 8px;
-  font: 500 11px/1 system-ui, sans-serif;
+  font:
+    500 11px/1 system-ui,
+    sans-serif;
   font-size-adjust: none;
   letter-spacing: 0;
 }
@@ -898,4 +1102,9 @@ html[data-palette="sage"] {
 .variant-switcher button[aria-pressed="true"] {
   background: #eee;
   color: #111;
+}
+@media (max-width: 760px) {
+  .variant-switcher {
+    display: none;
+  }
 }
