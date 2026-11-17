@@ -1,29 +1,22 @@
-# Welcome to your Lovable project
+# Oxten website
 
-This project was built with [Lovable](https://lovable.dev).
+The landing page for Oxten, served at https://www.oxten.ai.
 
-## Build with Lovable
+## How it is put together
 
-Open your project in the [Lovable editor](https://lovable.dev) and keep building.
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: connect the project to GitHub and every change made in Lovable is committed straight to your repository.
-- **Full ownership**: this code is yours. Push to your repository and your changes sync back into Lovable, ready for your next prompt.
+- The home page is one self-contained document, `src/home/v5.html`, served by `src/routes/index.tsx`.
+  It is generated from the design source with `python3 scripts/build-home.py <design index.html>`,
+  which sets image paths, metadata and the waitlist endpoint.
+- `src/routes/api/waitlist.ts` stores invite requests in the `waitlist` table.
+- `public/versions/` holds every earlier design direction, with a gallery at `/versions/index.html`.
+- `scripts/og.cjs` renders the social preview image from `scripts/og.html`.
 
 ## Development
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
-
 ```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
+bun install
+bun run dev
 ```
 
-## Built with
-
-- TanStack Start
-- TypeScript
-- React
-- Tailwind CSS
+Pushing to `main` deploys to production on Vercel. The waitlist endpoint needs
+`SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` in the environment.
