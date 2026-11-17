@@ -1,112 +1,126 @@
-import { useEffect, useRef, useState } from "react";
+type Row = { label: string; text: string; state: string; needsYou?: boolean };
+type Feed = { title: string; scope: string; rows: Row[]; result: string; action: string };
 
-const feeds = [
+// Sample data, labelled as such in the pane. Each feed is one agent run with its exceptions.
+const feeds: Feed[] = [
   {
-    title: "Agent activity",
-    label: "4 agents running",
+    title: "Oxten",
+    scope: "4 agents at work",
     rows: [
-      ["Evidence agent", "Mapped 42 requests to existing evidence", "42 / 42 matched"],
-      ["Risk agent", "Completed enterprise risk assessment", "99% fewer resources"],
-      ["Third-party agent", "Vendor questionnaire sent and reviewed", "Assessment complete"],
-      ["Questionnaire agent", "Drafted answers with verified sources", "Ready for review"],
+      { label: "Evidence requests", text: "39 of 42 matched", state: "3 need you", needsYou: true },
+      { label: "Risk assessment", text: "11 of 14 leaders interviewed", state: "In progress" },
+      { label: "Third-party reviews", text: "29 of 32 vendors answered", state: "In progress" },
+      {
+        label: "Security questionnaire",
+        text: "209 of 212 answers drafted",
+        state: "3 need you",
+        needsYou: true,
+      },
     ],
+    result: "Nothing is final until you approve it.",
+    action: "Open queue",
   },
   {
     title: "Evidence agent",
-    label: "Evidence agent running",
+    scope: "Auditor request list, 42 requests",
     rows: [
-      ["Auditor request 001", "Access control policy", "Matched · access_control.pdf"],
-      ["Auditor request 002", "Quarterly access review", "Matched · Q3_access_review.xlsx"],
-      ["Auditor request 003", "Security awareness training", "Matched · training_records.csv"],
-      ["Auditor request 004", "Incident response procedure", "Matched · incident_response.pdf"],
+      { label: "Access control policy", text: "access_control_v4.pdf", state: "Matched" },
+      { label: "Quarterly access review", text: "Q3_access_review.xlsx", state: "Matched" },
+      {
+        label: "Incident response test",
+        text: "No evidence on file",
+        state: "Needs you",
+        needsYou: true,
+      },
     ],
+    result: "39 of 42 matched. 3 need you.",
+    action: "Review package",
   },
   {
     title: "Risk agent",
-    label: "Risk agent running",
+    scope: "Enterprise risk assessment, 14 leaders",
     rows: [
-      ["Risk agent", "What are your team's critical dependencies?", "Interview · Operations"],
-      ["Operations leader", "Our customer data and core infrastructure.", "Response received"],
-      ["Risk agent", "How is access reviewed across those systems?", "Interview · Operations"],
-      ["Risk assessment", "Mapped to existing controls and evidence", "Ready for review"],
+      { label: "VP Operations", text: "Interview complete in Slack", state: "Answered" },
+      { label: "Head of Finance", text: "Two questions open", state: "Follow-up sent" },
+      { label: "CIO", text: "Asked about vendor concentration", state: "Answered" },
     ],
+    result: "11 of 14 complete. Draft report ready.",
+    action: "Review draft",
   },
   {
     title: "Third-party agent",
-    label: "Third-party agent running",
+    scope: "Vendor review, 32 vendors",
     rows: [
-      ["Vendor questionnaire", "Security review initiated", "Questionnaire sent"],
-      ["Vendor response", "Encryption and access controls", "Answers received"],
-      ["Evidence review", "SOC 2 report and policies", "Sources verified"],
-      ["Vendor assessment", "Security review complete", "Ready for review"],
+      { label: "Custom questionnaire", text: "Written and sent to 32 contacts", state: "Sent" },
+      { label: "Responses", text: "29 read in full", state: "3 chased" },
+      {
+        label: "Exposure",
+        text: "4 vendors without SSO enforcement",
+        state: "Needs you",
+        needsYou: true,
+      },
     ],
+    result: "4 findings need your decision.",
+    action: "Review findings",
   },
   {
     title: "Questionnaire agent",
-    label: "Questionnaire agent running",
+    scope: "Customer security questionnaire, 212 questions",
     rows: [
-      ["Customer question", "Is customer data encrypted at rest?", "Answer drafted"],
-      ["Source", "Encryption policy · Section 3.2", "Verified"],
-      ["Customer question", "How often are access reviews performed?", "Answer drafted"],
-      ["Source", "Access control policy · Section 4.1", "Verified"],
+      {
+        label: "Is customer data encrypted at rest?",
+        text: "Encryption policy, section 3.2",
+        state: "Drafted",
+      },
+      {
+        label: "How often are access reviews performed?",
+        text: "Access control policy, section 4.1",
+        state: "Drafted",
+      },
+      {
+        label: "Do you support customer-managed keys?",
+        text: "No source found",
+        state: "Needs you",
+        needsYou: true,
+      },
     ],
+    result: "209 drafted from your documents. 3 need you.",
+    action: "Review answers",
   },
 ];
+
 export function AgentPane({ kind = 0 }: { kind?: number }) {
-  const pane = useRef<HTMLDivElement>(null);
-  const [tick, setTick] = useState(0);
-  useEffect(() => {
-    const timer = setInterval(() => setTick((t) => t + 1), 2800);
-    return () => clearInterval(timer);
-  }, []);
   const feed = feeds[kind] ?? feeds[0];
   if (!feed) return null;
   return (
-    <div
-      ref={pane}
-      className="agent-pane"
-      onPointerMove={(e) => {
-        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-        const r = e.currentTarget.getBoundingClientRect();
-        pane.current?.style.setProperty(
-          "--tilt-x",
-          `${(e.clientY - r.top - r.height / 2) / 80}deg`,
-        );
-        pane.current?.style.setProperty(
-          "--tilt-y",
-          `${-(e.clientX - r.left - r.width / 2) / 80}deg`,
-        );
-      }}
-      onPointerLeave={() => {
-        pane.current?.style.setProperty("--tilt-x", "0deg");
-        pane.current?.style.setProperty("--tilt-y", "0deg");
-      }}
-    >
+    // The key restarts the run animation each time a different agent comes into view.
+    <div className="agent-pane" key={kind}>
       <div className="pane-top">
-        <span>{feed.title}</span>
+        <span className="pane-title">{feed.title}</span>
+        <span className="pane-scope">{feed.scope}</span>
       </div>
-      <div className="pane-status">
-        <span className="live-dot" />
-        {feed.label}
-        <span className="status-line" />
-      </div>
-      <div className="feed-rows">
-        {feed.rows.map(([title, text, status], i) => (
-          <div className={`feed-row ${tick % 4 === i ? "feed-current" : ""}`} key={`${kind}-${i}`}>
-            <div className="feed-meta">
-              <span>{title}</span>
+      <ul className="feed-rows">
+        {feed.rows.map((row, i) => (
+          <li
+            className="feed-row"
+            key={row.label}
+            style={{ animationDelay: `${0.25 + i * 0.45}s` }}
+          >
+            <div>
+              <span className="feed-label">{row.label}</span>
+              <span className="feed-text">{row.text}</span>
             </div>
-            <p>{text}</p>
-            <div className="feed-result">
-              <span className="complete-mark">✓</span>
-              {status}
-            </div>
-          </div>
+            <span className={`feed-state ${row.needsYou ? "feed-needs-you" : ""}`}>
+              {row.state}
+            </span>
+          </li>
         ))}
+      </ul>
+      <div className="pane-result" style={{ animationDelay: `${0.25 + feed.rows.length * 0.45}s` }}>
+        <span>{feed.result}</span>
+        <span className="pane-action">{feed.action}</span>
       </div>
-      <div className="pane-bottom">
-        <span>Illustrative, sample data</span>
-      </div>
+      <p className="pane-note">Illustrative, sample data</p>
     </div>
   );
 }

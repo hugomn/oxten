@@ -1,50 +1,32 @@
 import { useEffect, useState } from "react";
 
-const groups = {
-  type: ["instrument", "bricolage", "bebas"],
-  palette: ["glasshouse", "sage", "paper", "vanilla"],
-} as const;
+const options = ["serif", "sans"] as const;
 
-type Group = keyof typeof groups;
-
-// Review tool for comparing design variants. Remove before launch.
+// Review tool for comparing the two headline typefaces. Remove before launch.
 export function VariantSwitcher() {
-  const [state, setState] = useState<Record<Group, string>>({
-    type: "instrument",
-    palette: "glasshouse",
-  });
+  const [type, setType] = useState<string>("serif");
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const next = { ...state };
-    (Object.keys(groups) as Group[]).forEach((group) => {
-      const value = params.get(group) ?? window.localStorage.getItem(`oxten-v2-${group}`);
-      if (value && (groups[group] as readonly string[]).includes(value)) next[group] = value;
-    });
-    setState(next);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const value =
+      new URLSearchParams(window.location.search).get("type") ??
+      window.localStorage.getItem("oxten-v3-type");
+    if (value && (options as readonly string[]).includes(value)) setType(value);
   }, []);
   useEffect(() => {
-    (Object.keys(groups) as Group[]).forEach((group) => {
-      document.documentElement.dataset[group] = state[group];
-      window.localStorage.setItem(`oxten-v2-${group}`, state[group]);
-    });
-  }, [state]);
+    document.documentElement.dataset["type"] = type;
+    window.localStorage.setItem("oxten-v3-type", type);
+  }, [type]);
   return (
     <div className="variant-switcher">
-      {(Object.keys(groups) as Group[]).map((group) => (
-        <div key={group}>
-          <span>{group}</span>
-          {groups[group].map((value) => (
-            <button
-              key={value}
-              type="button"
-              aria-pressed={state[group] === value}
-              onClick={() => setState((s) => ({ ...s, [group]: value }))}
-            >
-              {value}
-            </button>
-          ))}
-        </div>
+      <span>Headlines</span>
+      {options.map((value) => (
+        <button
+          key={value}
+          type="button"
+          aria-pressed={type === value}
+          onClick={() => setType(value)}
+        >
+          {value}
+        </button>
       ))}
     </div>
   );
