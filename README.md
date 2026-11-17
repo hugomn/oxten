@@ -2,9 +2,14 @@
 
 The landing page for Oxten, served at https://www.oxten.ai.
 
-- The home page is the React route in `src/routes/index.tsx`, with the painted scene in `src/components/atmosphere.tsx`.
-- Early access requests are stored by `src/lib/early-access.functions.ts` in the `early_access_requests` table.
-- `public/versions/` holds earlier design directions, with a gallery at `/versions/index.html`.
+## How it is put together
+
+- The home page is one self-contained document, `src/home/v5.html`, served by `src/routes/index.tsx`.
+  It is generated from the design source with `python3 scripts/build-home.py <design index.html>`,
+  which sets image paths, metadata and the waitlist endpoint.
+- `src/routes/api/waitlist.ts` stores invite requests in the `waitlist` table.
+- `public/versions/` holds every earlier design direction, with a gallery at `/versions/index.html`.
+- `scripts/og.cjs` renders the social preview image from `scripts/og.html`.
 
 ## Development
 
@@ -13,5 +18,5 @@ bun install
 bun run dev
 ```
 
-Pushing to `main` deploys to production on Vercel. Storing requests needs `SUPABASE_URL` and
-`SUPABASE_SERVICE_ROLE_KEY` for the project named in `.env`.
+Pushing to `main` deploys to production on Vercel. The waitlist endpoint needs
+`SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` in the environment.
