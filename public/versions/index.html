@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Oxten, design versions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#08372B;--soft:#4f6b62;--paper:#F4F6F1;--line:#d9e2dc}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 16px/1.5 "Geist",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+main{max-width:1240px;margin:0 auto;padding:clamp(32px,7vw,88px) clamp(20px,4vw,48px) 96px}
+h1{font-weight:500;font-size:clamp(34px,5vw,60px);letter-spacing:-.045em;line-height:1;margin:0 0 14px}
+.intro{color:var(--soft);max-width:38em;margin:0 0 clamp(32px,6vw,64px)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:28px 24px}
+.card{display:block;color:inherit;text-decoration:none}
+.card img{display:block;width:100%;height:auto;border-radius:14px;border:1px solid var(--line);transition:transform .25s ease}
+.card:hover img{transform:translateY(-3px)}
+.card:focus-visible{outline:2px solid var(--ink);outline-offset:6px;border-radius:14px}
+.card div{padding:14px 2px 0}
+h2{font-weight:500;font-size:18px;letter-spacing:-.02em;margin:0 0 4px}
+.card p{margin:0 0 10px;color:var(--soft);font-size:15px}
+.card span{font:400 11px "IBM Plex Mono",monospace;text-transform:uppercase;letter-spacing:.05em}
+.card:first-child{grid-column:1/-1}
+@media (min-width:800px){.card:first-child{display:grid;grid-template-columns:1.6fr 1fr;gap:28px;align-items:end}.card:first-child h2{font-size:28px}}
+</style>
+</head>
+<body>
+<main>
+  <h1>Oxten design versions</h1>
+  <p class="intro">Every direction explored for the landing page, newest first. Internal review page.</p>
+  <div class="grid">
+    <a class="card" href="v5/index.html">
+      <img src="thumbs/v5.jpg" alt="" width="960" height="600" loading="lazy">
+      <div><h2>Version 5, current</h2><p>Night to night. Geist with IBM Plex Mono, emerald, moonlight accent, floating panes, bento.</p><span>Open</span></div>
+    </a>
+    <a class="card" href="v4/index.html">
+      <img src="thumbs/v4.jpg" alt="" width="960" height="600" loading="lazy">
+      <div><h2>Version 4</h2><p>One garden from morning to night. The first full page in this direction.</p><span>Open</span></div>
+    </a>
+    <a class="card" href="a-morning/index.html">
+      <img src="thumbs/a-morning.jpg" alt="" width="960" height="600" loading="lazy">
+      <div><h2>Direction A, the morning garden</h2><p>Light and painterly, three floating glass panes.</p><span>Open</span></div>
+    </a>
+    <a class="card" href="b-glasshouse/index.html">
+      <img src="thumbs/b-glasshouse.jpg" alt="" width="960" height="600" loading="lazy">
+      <div><h2>Direction B, the glasshouse at night</h2><p>Dark and luminous, the product as the lit glasshouse.</p><span>Open</span></div>
+    </a>
+    <a class="card" href="c-color/index.html">
+      <img src="thumbs/c-color.jpg" alt="" width="960" height="600" loading="lazy">
+      <div><h2>Direction C, Meadows turned up</h2><p>Flat, joyful illustration, closest to the agency look.</p><span>Open</span></div>
+    </a>
+    <a class="card" href="https://oxten-git-product-first-hugomn.vercel.app/">
+      <img src="thumbs/product-first.jpg" alt="" width="960" height="600" loading="lazy">
+      <div><h2>0.5, product first</h2><p>Agent workspace as hero, garden as plots. Built in the app.</p><span>Open preview</span></div>
+    </a>
+    <a class="card" href="https://github.com/hugomn/oxten/tree/v0.4-plan-gets-tended">
+      <img src="thumbs/plan-gets-tended.jpg" alt="" width="960" height="600" loading="lazy">
+      <div><h2>0.4, the plan gets tended</h2><p>Pinned scroll, the garden planted bed by bed.</p><span>View code</span></div>
+    </a>
+    <a class="card" href="https://github.com/hugomn/oxten/tree/v0.3-glass-garden">
+      <img src="thumbs/glass-garden.jpg" alt="" width="960" height="600" loading="lazy">
+      <div><h2>0.3, glass garden</h2><p>Full-screen top-down garden under panes of glass.</p><span>View code</span></div>
+    </a>
+    <a class="card" href="https://oxten-git-main-hugomn.vercel.app/">
+      <img src="thumbs/lovable.jpg" alt="" width="960" height="600" loading="lazy">
+      <div><h2>0.1, Lovable export</h2><p>The starting point, as exported from Lovable.</p><span>Open preview</span></div>
+    </a>
+  </div>
+</main>
+</body>
+</html>

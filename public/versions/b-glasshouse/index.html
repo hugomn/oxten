@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Oxten. Standalone GRC agents.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Geist:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#07110F;        /* blue-black under the hedges */
+  --hedge:#10241D;        /* clipped yew */
+  --moss:#2C4A3A;         /* hedge catching light */
+  --moon:#A9C3E4;         /* moonlit blue */
+  --lamp:#FFC46B;         /* lamplight, the one accent */
+  --lamp-deep:#F09A3E;
+  --leaf:#A8D5A2;         /* finished work */
+  --paper:#F6EEDF;        /* warm off-white type */
+  --paper-2:rgba(246,238,223,.68);
+  --paper-3:rgba(246,238,223,.42);
+  --bar:rgba(255,232,196,.17); /* glazing bars */
+  --display:"Bricolage Grotesque", "Helvetica Neue", sans-serif;
+  --text:"Geist", "Helvetica Neue", sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--night);-webkit-text-size-adjust:100%}
+body{font-family:var(--text);color:var(--paper);background:var(--night);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--lamp);outline-offset:3px}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* ───────── hero ───────── */
+.hero{position:relative;min-height:100vh;min-height:100svh;display:flex;flex-direction:column;isolation:isolate}
+.scene{position:absolute;inset:0;z-index:-2;overflow:hidden;background:var(--night)}
+.scene img{position:absolute;inset:-2%;width:104%;height:104%;object-fit:cover;object-position:100% 30%;filter:blur(2px) saturate(1.12) brightness(1.12)}
+.scene::after{content:"";position:absolute;inset:0;
+  background:
+    linear-gradient(90deg, rgba(5,13,12,.62) 0%, rgba(5,13,12,.42) 30%, rgba(5,13,12,.06) 56%, rgba(5,13,12,0) 100%),
+    linear-gradient(180deg, rgba(5,13,12,.30) 0%, rgba(5,13,12,0) 20%, rgba(5,13,12,0) 74%, var(--night) 100%)}
+#flies{position:absolute;inset:0;z-index:-1;width:100%;height:100%;pointer-events:none}
+
+.top{display:flex;align-items:center;justify-content:space-between;padding:30px 56px 0}
+.wordmark{font-family:var(--display);font-weight:700;font-size:28px;letter-spacing:-.035em;font-variation-settings:"opsz" 28;color:var(--paper);text-decoration:none}
+.top-note{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--paper-2);text-decoration:none}
+.top-note:hover{color:var(--paper)}
+.top-note i{width:7px;height:7px;border-radius:50%;background:var(--lamp);box-shadow:0 0 12px 2px rgba(255,196,107,.7)}
+
+.stage{flex:1;display:grid;grid-template-columns:minmax(0,560px) minmax(0,1fr);gap:40px;align-items:center;padding:28px 44px 52px 56px}
+h1{font-family:var(--display);font-weight:640;font-size:clamp(44px,6.05vw,90px);line-height:.94;letter-spacing:-.022em;font-variation-settings:"opsz" 96;color:var(--paper);text-wrap:balance;text-shadow:0 2px 40px rgba(5,13,12,.6)}
+h1 span{display:block}
+h1 span + span{color:#FFE3B4}
+.lead{margin-top:28px;max-width:25em;font-size:20px;line-height:1.45;color:var(--paper-2)}
+.invite{margin-top:34px;display:flex;gap:8px;max-width:470px;padding:6px;border-radius:999px;background:rgba(246,238,223,.08);border:1px solid rgba(246,238,223,.2);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.invite input{flex:1;min-width:0;background:none;border:0;padding:0 8px 0 18px;font-size:16px;color:var(--paper)}
+.invite input::placeholder{color:var(--paper-3)}
+.invite input:focus{outline:none}
+.invite:focus-within{border-color:rgba(255,196,107,.75)}
+.btn{border:0;cursor:pointer;border-radius:999px;padding:14px 22px;font-weight:600;font-size:16px;white-space:nowrap;color:#2A1703;background:linear-gradient(180deg,#FFD58F,var(--lamp) 55%,#F7AE4E);box-shadow:0 0 0 1px rgba(255,220,160,.5) inset,0 8px 34px -6px rgba(255,170,70,.65);transition:box-shadow .25s, transform .15s}
+.btn:hover{box-shadow:0 0 0 1px rgba(255,230,180,.8) inset,0 10px 46px -4px rgba(255,180,80,.9)}
+.btn:active{transform:translateY(1px)}
+.trust{margin-top:26px;display:flex;flex-wrap:wrap;row-gap:8px;list-style:none;font-size:14px;color:var(--paper-2);white-space:nowrap}
+.trust li{padding:0 14px;border-left:1px solid rgba(246,238,223,.22);line-height:1.2}
+.trust li:first-child{padding-left:0;border-left:0}
+
+/* ───────── the glass ───────── */
+.glasswrap{position:relative;justify-self:end;align-self:end;width:100%;max-width:800px}
+.glasswrap::before{ /* light spilling onto the lawn */
+  content:"";position:absolute;left:6%;right:6%;bottom:-42px;height:84px;border-radius:50%;
+  background:radial-gradient(closest-side, rgba(255,190,105,.42), rgba(255,190,105,0));filter:blur(18px);z-index:-1}
+.glass{position:relative;border-radius:14px;overflow:hidden;
+  background:linear-gradient(180deg, rgba(58,46,26,.46), rgba(16,30,25,.62));
+  backdrop-filter:blur(26px) saturate(1.5) brightness(.82);-webkit-backdrop-filter:blur(26px) saturate(1.5) brightness(.82);
+  border:1px solid rgba(255,232,196,.36);
+  box-shadow:0 0 0 1px rgba(0,0,0,.35), 0 0 90px -10px rgba(255,186,96,.42), 0 40px 80px -30px rgba(0,0,0,.8), inset 0 1px 0 rgba(255,244,220,.35);
+  font-size:13px;line-height:1.4;transition:box-shadow 1.2s}
+.glass.pulse{box-shadow:0 0 0 1px rgba(0,0,0,.35), 0 0 130px -6px rgba(255,186,96,.62), 0 40px 80px -30px rgba(0,0,0,.8), inset 0 1px 0 rgba(255,244,220,.45)}
+.glass::before{ /* reflection */
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:3;
+  background:linear-gradient(115deg, rgba(255,255,255,.10) 0%, rgba(255,255,255,0) 22%, rgba(255,255,255,0) 70%, rgba(169,195,228,.07) 100%)}
+
+.g-bar{display:flex;align-items:center;gap:18px;height:46px;padding:0 16px;border-bottom:1px solid var(--bar);background:linear-gradient(180deg,rgba(255,236,200,.13),rgba(255,236,200,.03))}
+.g-brand{font-family:var(--display);font-weight:700;letter-spacing:-.03em;font-size:15px}
+.g-scope{color:var(--paper-2);white-space:nowrap}
+.g-tabs{display:flex;gap:2px;margin-left:auto}
+.g-tabs span{padding:5px 10px;border-radius:7px;color:var(--paper-2);white-space:nowrap}
+.g-tabs .on{background:rgba(255,232,196,.13);color:var(--paper)}
+.g-tabs b{font-weight:600;color:#2A1703;background:var(--lamp);border-radius:99px;padding:0 6px;margin-left:5px;font-size:11px}
+.g-clock{color:var(--paper-2);font-variant-numeric:tabular-nums;white-space:nowrap}
+
+.g-body{display:grid;grid-template-columns:1.22fr 1fr}
+.g-left{border-right:1px solid var(--bar);min-width:0}
+.g-right{min-width:0;display:flex;flex-direction:column}
+.g-h{display:flex;align-items:baseline;justify-content:space-between;padding:13px 16px 9px;font-weight:600;font-size:13px}
+.g-h small{font-weight:400;font-size:12px;color:var(--paper-2)}
+.live{display:inline-flex;align-items:center;gap:7px}
+.live i{width:6px;height:6px;border-radius:50%;background:var(--lamp);box-shadow:0 0 10px 2px rgba(255,196,107,.8);animation:blink 2.4s ease-in-out infinite}
+@keyframes blink{50%{opacity:.35}}
+
+/* agent panes: glazing, not cards */
+.panes{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--bar);border-bottom:1px solid var(--bar)}
+.pane{position:relative;padding:14px 16px 15px;min-height:142px;overflow:hidden}
+.pane:nth-child(odd){border-right:1px solid var(--bar)}
+.pane:nth-child(-n+2){border-bottom:1px solid var(--bar)}
+.pane::before{content:"";position:absolute;inset:0;z-index:-1;opacity:var(--lit,.5);transition:opacity 1.6s ease;
+  background:radial-gradient(120% 130% at 50% 118%, rgba(255,200,112,.78), rgba(255,176,84,.22) 52%, rgba(255,170,80,0) 80%)}
+.pane.flash::before{opacity:1;transition:opacity .25s ease}
+.pane.off::before{opacity:0}
+.p-name{display:flex;align-items:center;gap:9px;font-family:var(--display);font-weight:650;font-size:18px;letter-spacing:-.02em}
+.p-job{margin-top:2px;color:var(--paper-2);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.p-now{margin-top:12px;min-height:36px;font-size:12.5px;line-height:1.4;color:var(--paper)}
+.p-now em{font-style:normal;color:var(--paper-2)}
+.p-meter{margin-top:10px;display:flex;align-items:center;gap:10px;font-size:12px;color:var(--paper-2);font-variant-numeric:tabular-nums}
+.p-meter b{color:var(--paper);font-weight:600}
+.track{flex:1;height:3px;border-radius:3px;background:rgba(255,232,196,.16);overflow:hidden}
+.track i{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,#FFE0A8,var(--lamp));box-shadow:0 0 10px rgba(255,196,107,.9);transition:width 1s cubic-bezier(.2,.7,.2,1)}
+
+/* the four-pane glyph: one lit pane per agent */
+.glyph{flex:none;display:grid;grid-template-columns:1fr 1fr;gap:2px;width:16px;height:16px}
+.glyph i{border-radius:1.5px;background:rgba(255,232,196,.2)}
+.glyph[data-k="0"] i:nth-child(1),.glyph[data-k="1"] i:nth-child(2),.glyph[data-k="2"] i:nth-child(3),.glyph[data-k="3"] i:nth-child(4){background:var(--lamp);box-shadow:0 0 8px rgba(255,196,107,.9)}
+
+/* stream */
+.stream{list-style:none;height:132px;overflow:hidden;position:relative;padding:0 16px;
+  -webkit-mask-image:linear-gradient(180deg,#000 72%,transparent);mask-image:linear-gradient(180deg,#000 72%,transparent)}
+.stream li{display:grid;grid-template-columns:52px 1fr;gap:10px;padding:7px 0;border-top:1px solid rgba(255,232,196,.09);font-size:12.5px}
+.stream li:first-child{border-top:0}
+.stream li.in{animation:drop .6s cubic-bezier(.2,.7,.2,1)}
+@keyframes drop{from{opacity:0;transform:translateY(-10px)}}
+.stream time{color:var(--paper-3);font-variant-numeric:tabular-nums}
+.stream strong{font-weight:600}
+.stream .ok{color:var(--leaf)}
+.src{display:inline-flex;align-items:center;gap:5px;margin:3px 6px 0 0;padding:1px 7px 1px 6px;border-radius:5px;font-size:11.5px;color:var(--moon);background:rgba(169,195,228,.12);border:1px solid rgba(169,195,228,.22);white-space:nowrap}
+.src::before{content:"";width:5px;height:7px;border:1px solid currentColor;border-radius:1px;opacity:.8}
+
+/* decisions */
+.decide{margin:0 12px 10px;border-radius:10px;padding:13px 14px 14px;background:linear-gradient(180deg,rgba(255,224,170,.20),rgba(255,224,170,.08));border:1px solid rgba(255,214,150,.42);box-shadow:0 10px 40px -14px rgba(255,180,80,.5)}
+.d-from{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--paper-2)}
+.d-q{margin-top:8px;font-family:var(--display);font-weight:620;font-size:17px;line-height:1.22;letter-spacing:-.015em}
+.d-why{margin-top:8px;font-size:12.5px;color:var(--paper-2)}
+.d-why sup{font-size:10px;color:var(--moon);font-weight:600;padding-left:1px}
+.d-src{margin-top:8px}
+.d-act{margin-top:13px;display:flex;gap:8px;align-items:center}
+.d-act button{cursor:pointer;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:600;border:1px solid rgba(246,238,223,.28);background:rgba(246,238,223,.06)}
+.d-act .yes{border:0;color:#2A1703;background:linear-gradient(180deg,#FFD58F,var(--lamp));box-shadow:0 6px 22px -6px rgba(255,170,70,.8)}
+.d-act span{margin-left:auto;font-size:12px;color:var(--paper-3)}
+.decide.done{background:rgba(168,213,162,.10);border-color:rgba(168,213,162,.4);box-shadow:none}
+.decide.done .d-act button{display:none}
+.decide.done .d-act span{margin-left:0;color:var(--leaf)}
+.queue{list-style:none;border-top:1px solid var(--bar);margin-top:auto}
+.queue li{display:flex;gap:10px;align-items:flex-start;padding:11px 16px;border-top:1px solid rgba(255,232,196,.09)}
+.queue li:first-child{border-top:0}
+.queue p{flex:1;font-size:12.5px}
+.queue p small{display:block;font-size:12px;color:var(--paper-2)}
+.queue u{text-decoration:none;font-size:12px;color:var(--lamp);white-space:nowrap}
+.queue .glyph{margin-top:2px}
+
+/* lights come on, pane by pane */
+.js .glass{opacity:0;transform:translateY(14px)}
+.js .ready .glass{opacity:1;transform:none;transition:opacity 1.1s ease .15s, transform 1.1s cubic-bezier(.2,.7,.2,1) .15s, box-shadow 1.2s}
+
+/* ───────── section two ───────── */
+.more{position:relative;padding:130px 56px 0;background:
+  radial-gradient(60% 26% at 78% 0%, rgba(255,186,96,.10), rgba(255,186,96,0) 70%),
+  linear-gradient(180deg, var(--night) 0%, #0B1A16 30%, #0A1626 62%, #0B1B3A 100%)}
+.more-in{max-width:1328px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:96px;align-items:start}
+h2{font-family:var(--display);font-weight:620;font-size:clamp(34px,4.2vw,62px);line-height:1;letter-spacing:-.028em;font-variation-settings:"opsz" 96;text-wrap:balance}
+h2 span{display:block;margin-top:.28em;color:var(--paper-3)}
+.roster{list-style:none;border-top:1px solid var(--bar)}
+.roster li{display:grid;grid-template-columns:34px 1fr;gap:6px 18px;padding:26px 0;border-bottom:1px solid var(--bar)}
+.roster .glyph{width:24px;height:24px;gap:3px;margin-top:7px}
+.roster h3{font-family:var(--display);font-weight:640;font-size:32px;letter-spacing:-.03em;line-height:1.1}
+.roster p{grid-column:2;font-size:18px;line-height:1.45;color:var(--paper-2);max-width:30em}
+.close{position:relative;margin:40px -56px 0;height:780px;isolation:isolate;display:flex;flex-direction:column}
+.close img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:60% 100%;z-index:-1;
+  -webkit-mask-image:linear-gradient(180deg,transparent 0%,#000 42%);mask-image:linear-gradient(180deg,transparent 0%,#000 42%)}
+.bigger{width:100%;max-width:1440px;margin:0 auto;padding:150px 56px 0}
+.bigger p{font-family:var(--display);font-weight:630;font-size:clamp(36px,5vw,74px);line-height:.98;letter-spacing:-.028em;font-variation-settings:"opsz" 96;max-width:9.5em;text-wrap:balance;margin-bottom:34px}
+.bigger .btn{display:inline-block;text-decoration:none}
+.foot{width:100%;max-width:1440px;margin:auto auto 0;padding:22px 56px 26px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-size:14px;color:var(--paper-2)}
+
+/* ───────── small screens ───────── */
+@media (max-width:1100px){
+  .stage{grid-template-columns:1fr;gap:48px;padding:40px 32px 80px}
+  .glasswrap{justify-self:stretch;align-self:auto;max-width:none}
+  .scene img{object-position:86% 30%}
+  .more-in{grid-template-columns:1fr;gap:56px}
+}
+@media (max-width:640px){
+  .top{padding:20px 22px 0}
+  .wordmark{font-size:24px}
+  .top-note{font-size:13px}
+  .scene{bottom:auto;height:640px}
+  .scene img{object-position:83% 0%;inset:0;width:100%;height:100%;filter:blur(1.5px) saturate(1.08)}
+  .scene::after{background:linear-gradient(180deg, rgba(5,13,12,.30) 0%, rgba(5,13,12,.10) 22%, rgba(5,13,12,.78) 48%, var(--night) 78%)}
+  .stage{padding:236px 22px 64px;gap:44px;align-items:start}
+  h1{font-size:46px;line-height:.96}
+  .lead{font-size:17px;margin-top:20px}
+  .invite{flex-direction:column;border-radius:20px;padding:6px;margin-top:26px}
+  .invite input{padding:13px 14px}
+  .btn{width:100%}
+  .trust{flex-direction:column;gap:9px;margin-top:22px}
+  .trust li{padding:0 0 0 12px;border-left:1px solid rgba(255,196,107,.6)}
+  .trust li:first-child{padding-left:12px;border-left:1px solid rgba(255,196,107,.6)}
+  .glasswrap{margin:0 -8px}
+  .g-bar{gap:10px;padding:0 12px}
+  .g-scope,.g-tabs span:not(.on):not(.keep){display:none}
+  .g-body{grid-template-columns:1fr}
+  .g-left{border-right:0}
+  .g-right{order:-1;border-bottom:1px solid var(--bar)}
+  .pane{padding:12px 12px 13px;min-height:0}
+  .p-name{font-size:16px}
+  .p-now{min-height:54px}
+  .queue{display:none}
+  .stream{height:190px;padding:0 12px}
+  .more{padding:84px 22px 0}
+  .close{margin:20px -22px 0;height:640px}
+  .close img{object-position:76% 100%}
+  .bigger{padding:90px 22px 0}
+  .foot{padding:18px 22px 22px;font-size:13px}
+  .roster h3{font-size:27px}
+  .roster p{font-size:16.5px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .js .glass{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+<script>document.documentElement.classList.add('js')</script>
+
+<header class="hero" id="hero">
+  <div class="scene" aria-hidden="true">
+    <img src="night-garden.jpg" alt="">
+  </div>
+  <canvas id="flies" aria-hidden="true"></canvas>
+
+  <div class="top">
+    <a class="wordmark" href="#hero">Oxten</a>
+    <a class="top-note" href="#email"><i></i>Agents are working tonight</a>
+  </div>
+
+  <div class="stage">
+    <div class="pitch">
+      <h1><span>Standalone GRC agents.</span><span>Next to any platform.</span></h1>
+      <p class="lead">Domain-trained Oxten agents do the GRC work you didn't think you could hand off.</p>
+      <form class="invite" onsubmit="return false">
+        <label class="vh" for="email">Work email</label>
+        <input id="email" type="email" placeholder="Work email" autocomplete="email">
+        <button class="btn" type="submit">Request an invite</button>
+      </form>
+      <ul class="trust">
+        <li>Invite only</li>
+        <li>Backed by Google Ventures</li>
+        <li>From the team behind Complyance</li>
+      </ul>
+    </div>
+
+    <div class="glasswrap">
+      <div class="glass" id="glass" role="img" aria-label="The Oxten agent platform: four agents working overnight, a live activity stream with sources, and decisions waiting for a person.">
+        <div class="g-bar">
+          <span class="g-brand">Oxten</span>
+          <span class="g-scope">SOC 2 Type II, FY26 audit</span>
+          <div class="g-tabs"><span class="on">Tonight</span><span>Agents</span><span class="keep">Decisions<b id="dcount">3</b></span><span>Sources</span></div>
+          <span class="g-clock" id="clock">2:14 AM</span>
+        </div>
+        <div class="g-body">
+          <div class="g-left">
+            <div class="g-h"><span class="live"><i></i>4 agents working</span><small>Since 6:02 PM</small></div>
+            <div class="panes" id="panes"></div>
+            <div class="g-h"><span>Activity</span><small>Every step cites its source</small></div>
+            <ul class="stream" id="stream"></ul>
+          </div>
+          <div class="g-right">
+            <div class="g-h"><span>Needs your decision</span><small id="dsmall">3 waiting</small></div>
+            <div class="decide" id="decide">
+              <div class="d-from"><span class="glyph" data-k="2"><i></i><i></i><i></i><i></i></span>Third party, vendor review of Halcyon Payroll</div>
+              <p class="d-q">Accept the access review exception in their SOC 2 report?</p>
+              <p class="d-why">The auditor notes one missed quarterly access review<sup>1</sup>. Halcyon fixed the process in August and the Q3 review is complete<sup>2</sup>. Your policy allows acceptance with a follow-up<sup>3</sup>. I recommend accepting and checking again in 90 days.</p>
+              <div class="d-src"><span class="src">1 SOC 2 report, p. 41</span><span class="src">2 Q3 access review</span><span class="src">3 Vendor policy 4.2</span></div>
+              <div class="d-act"><button class="yes" id="approve" type="button">Approve</button><button type="button">Send back</button><span id="dstate">Asked 1:52 AM</span></div>
+            </div>
+            <ul class="queue">
+              <li><span class="glyph" data-k="0"><i></i><i></i><i></i><i></i></span><p>Request 37: use the October change sample?<small>September export is missing 4 tickets</small></p><u>Review</u></li>
+              <li><span class="glyph" data-k="3"><i></i><i></i><i></i><i></i></span><p>12 answers need a named owner before sending<small>SIG Lite, sections H and K</small></p><u>Review</u></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="more">
+  <div class="more-in">
+    <h2>GRC kept being asked to do more with less.<span>And your team stays the same size.</span></h2>
+    <div>
+      <ul class="roster">
+        <li><span class="glyph" data-k="0"><i></i><i></i><i></i><i></i></span><h3>Evidence</h3><p>Works the auditor's evidence request list.</p></li>
+        <li><span class="glyph" data-k="1"><i></i><i></i><i></i><i></i></span><h3>Risk</h3><p>Conducts enterprise risk assessments by interviewing leaders.</p></li>
+        <li><span class="glyph" data-k="2"><i></i><i></i><i></i><i></i></span><h3>Third party</h3><p>Runs vendor security reviews.</p></li>
+        <li><span class="glyph" data-k="3"><i></i><i></i><i></i><i></i></span><h3>Questionnaires</h3><p>Answers customer security questionnaires.</p></li>
+      </ul>
+    </div>
+  </div>
+  <div class="close">
+    <img src="night-far.jpg" alt="">
+    <div class="bigger">
+      <p>Your team is about to get a lot bigger.</p>
+      <a class="btn" href="#email">Request an invite</a>
+    </div>
+    <div class="foot"><span>Oxten</span><span>Invite only. Backed by Google Ventures. From the team behind Complyance.</span></div>
+  </div>
+</main>
+
+<script>
+(function(){
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var still = /[?&]still/.test(location.search);
+
+  var agents = [
+    {name:'Evidence', job:'Auditor request list, SOC 2 Type II', done:41, total:58, unit:'requests closed', lit:.62,
+     now:['Pulling the Q3 access review from <em>Okta</em>','Matching 25 change tickets to pull requests in <em>GitHub</em>','Checking backup restore test against <em>runbook DR-7</em>']},
+    {name:'Risk', job:'Enterprise risk assessment, FY27', done:6, total:11, unit:'leaders interviewed', lit:.38,
+     now:['Writing up the interview with the <em>VP of Infrastructure</em>','Preparing questions for the <em>General Counsel</em>, 9:30 AM','Scoring 4 new risks against the <em>risk register</em>']},
+    {name:'Third party', job:'Vendor security reviews, Q4', done:14, total:19, unit:'vendors reviewed', lit:.78,
+     now:['Reading the SOC 2 report from <em>Halcyon Payroll</em>','Comparing pen test scope from <em>Brightlane</em>','Checking subprocessors listed by <em>Corvid Analytics</em>']},
+    {name:'Questionnaires', job:'SIG Lite for an enterprise prospect', done:212, total:260, unit:'answers drafted', lit:.5,
+     now:['Answering encryption questions from <em>Encryption Standard v3</em>','Reusing answers from the <em>March CAIQ</em>','Drafting incident response answers from <em>IR plan 2.1</em>']}
+  ];
+  var feed = [
+    [0,'Closed request 42, backup restore test','Runbook DR-7','Restore log, Nov 9',1],
+    [3,'Drafted 18 encryption answers','Encryption Standard v3','',18],
+    [2,'Flagged 1 exception in Halcyon Payroll SOC 2','SOC 2 report, p. 41','',0],
+    [1,'Summarized interview with VP of Infrastructure, 4 risks raised','Interview notes','',1],
+    [0,'Closed request 43, quarterly access review','Okta export','Review sign-off',1],
+    [2,'Finished review of Corvid Analytics, no open items','Trust center','DPA, section 7',1],
+    [3,'Reused 9 answers from the March CAIQ','Answer library','',9],
+    [0,'Matched 25 change tickets to pull requests','GitHub','Jira',1],
+    [1,'Scored vendor concentration risk as high, sent for review','Risk register','',0],
+    [3,'Drafted 7 incident response answers','IR plan 2.1','',7],
+    [2,'Asked Brightlane to confirm pen test scope','Email thread','',0],
+    [0,'Closed request 44, encryption at rest','AWS Config','',1]
+  ];
+
+  var panes = document.getElementById('panes'), stream = document.getElementById('stream'), glass = document.getElementById('glass');
+  function glyph(k){return '<span class="glyph" data-k="'+k+'"><i></i><i></i><i></i><i></i></span>'}
+  agents.forEach(function(a,k){
+    var el = document.createElement('div'); el.className='pane off'; el.style.setProperty('--lit', a.lit);
+    el.innerHTML = '<div class="p-name">'+glyph(k)+a.name+'</div><div class="p-job">'+a.job+'</div>'+
+      '<p class="p-now">'+a.now[0]+'</p>'+
+      '<div class="p-meter"><span><b>'+a.done+'</b> of '+a.total+'</span><span class="track"><i style="width:'+(a.done/a.total*100)+'%"></i></span></div>';
+    panes.appendChild(el); a.el = el; a.i = 0;
+  });
+
+  var mins = 14;
+  function stamp(){var h = 2 + Math.floor(mins/60), m = mins%60; return h+':'+(m<10?'0':'')+m}
+  function row(f, fresh){
+    var li = document.createElement('li'); if(fresh) li.className='in';
+    li.innerHTML = '<time>'+stamp()+' AM</time><div><strong>'+agents[f[0]].name+'</strong> <span>'+f[1]+'</span><br>'+
+      '<span class="src">'+f[2]+'</span>'+(f[3]?'<span class="src">'+f[3]+'</span>':'')+'</div>';
+    return li;
+  }
+  // seed the stream with history
+  [3,2,1,0].forEach(function(n,idx){ mins = 14 - (n+1)*3 + 1; stream.appendChild(row(feed[(feed.length-1-idx)%feed.length], false)); });
+  mins = 14;
+  // reverse so newest is first
+  Array.prototype.slice.call(stream.children).reverse().forEach(function(li){stream.appendChild(li)});
+
+  var n = 0;
+  function tick(){
+    var f = feed[n % feed.length]; n++;
+    var a = agents[f[0]];
+    mins += 1 + (n % 3);
+    document.getElementById('clock').textContent = stamp() + ' AM';
+    stream.insertBefore(row(f, true), stream.firstChild);
+    while(stream.children.length > 7) stream.removeChild(stream.lastChild);
+    if(f[4]){ a.done = Math.min(a.total, a.done + f[4]); }
+    a.i = (a.i + 1) % a.now.length;
+    a.el.querySelector('.p-now').innerHTML = a.now[a.i];
+    a.el.querySelector('b').textContent = a.done;
+    a.el.querySelector('.track i').style.width = (a.done/a.total*100)+'%';
+    a.lit = Math.min(.95, a.lit + .05); a.el.style.setProperty('--lit', a.lit);
+    a.el.classList.add('flash'); glass.classList.add('pulse');
+    setTimeout(function(){ a.el.classList.remove('flash'); glass.classList.remove('pulse'); }, 700);
+  }
+
+  // approve: a person's action, answered
+  document.getElementById('approve').addEventListener('click', function(){
+    document.getElementById('decide').classList.add('done');
+    document.getElementById('dstate').textContent = 'Approved. Follow-up set for 90 days.';
+    document.getElementById('dcount').textContent = '2';
+    document.getElementById('dsmall').textContent = '2 waiting';
+    var a = agents[2]; a.el.classList.add('flash'); setTimeout(function(){a.el.classList.remove('flash')}, 900);
+  });
+
+  // the lights come on
+  function lightsOn(){
+    document.getElementById('hero').classList.add('ready');
+    agents.forEach(function(a,k){ setTimeout(function(){ a.el.classList.remove('off'); }, (reduce||still) ? 0 : 700 + k*260); });
+    if(!reduce && !still) setTimeout(function(){ tick(); setInterval(tick, 3200); }, 2600);
+  }
+  if(document.readyState === 'complete') lightsOn(); else addEventListener('load', lightsOn);
+
+  // fireflies
+  var c = document.getElementById('flies'), x = c.getContext('2d'), W, H, D = Math.min(devicePixelRatio||1, 2), flies = [];
+  function size(){ W = c.clientWidth; H = c.clientHeight; c.width = W*D; c.height = H*D; x.setTransform(D,0,0,D,0,0); }
+  function seed(){
+    flies = []; var count = W < 700 ? 14 : 34;
+    for(var i=0;i<count;i++){
+      var r = Math.random();
+      flies.push({x:Math.random()*W*(W<700?1:.62), y:H*(.34 + Math.random()*.56), r:.8 + r*1.9, p:Math.random()*6.28, s:.25 + Math.random()*.5,
+        vx:(Math.random()-.5)*.16, vy:(Math.random()-.5)*.10, w:20 + Math.random()*40});
+    }
+  }
+  function draw(t){
+    x.clearRect(0,0,W,H); x.globalCompositeOperation = 'lighter';
+    for(var i=0;i<flies.length;i++){
+      var f = flies[i], k = t/1000*f.s + f.p;
+      var px = f.x + Math.sin(k*.7)*f.w, py = f.y + Math.cos(k*.53)*f.w*.45;
+      var a = Math.pow(Math.max(0, Math.sin(k*1.3)), 2) * .9 + .06;
+      var R = f.r*4.5, g = x.createRadialGradient(px,py,0,px,py,R);
+      g.addColorStop(0,'rgba(255,226,150,'+a+')'); g.addColorStop(.25,'rgba(255,196,107,'+a*.45+')'); g.addColorStop(1,'rgba(255,196,107,0)');
+      x.fillStyle = g; x.beginPath(); x.arc(px,py,R,0,6.283); x.fill();
+      f.x += f.vx; f.y += f.vy;
+      if(f.x < -40) f.x = W*.62; if(f.x > W*.7) f.x = -20; if(f.y < H*.28) f.vy = Math.abs(f.vy); if(f.y > H*.95) f.vy = -Math.abs(f.vy);
+    }
+    if(!reduce && !still) requestAnimationFrame(draw);
+  }
+  size(); seed(); requestAnimationFrame(draw); if(reduce||still) draw(4200);
+  addEventListener('resize', function(){ size(); seed(); if(reduce||still) draw(4200); });
+})();
+</script>
+</body>
+</html>

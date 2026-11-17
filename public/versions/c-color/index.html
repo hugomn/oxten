@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Oxten. Standalone GRC agents.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=Geist:wght@400..700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --sky:#BCEBF8;
+  --sky-deep:#8FC6D6;
+  --lawn:#86A84C;
+  --lawn-2:#74983C;
+  --hedge:#3F5A14;
+  --hedge-deep:#243C0C;
+  --ink:#16260A;
+  --vanilla:#F6F0D6;
+  --pink:#FBD9EA;
+  --raspberry:#D8234F;
+  --raspberry-deep:#B3163E;
+  --pad:56px;
+  --display:"Bricolage Grotesque",system-ui,sans-serif;
+  --ui:"Geist",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:var(--ui);color:var(--ink);background:var(--hedge-deep);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--raspberry);outline-offset:3px;border-radius:6px}
+
+/* ---------- hero world ---------- */
+.hero{position:relative;min-height:900px;overflow:hidden;isolation:isolate;background:var(--sky)}
+.world{position:absolute;inset:0;z-index:-1;pointer-events:none}
+.clouds{position:absolute;left:0;top:0;height:100%;width:400%;background-repeat:repeat-x;background-image:url(clouds.webp);will-change:transform}
+.clouds.far{background-size:1500px auto;background-position:0 -70px;opacity:.75;animation:drift-far 420s linear infinite}
+.clouds.near{background-size:2300px auto;background-position:-700px 40px;animation:drift-near 300s linear infinite}
+@keyframes drift-far{to{transform:translate3d(-1500px,0,0)}}
+@keyframes drift-near{to{transform:translate3d(-2300px,0,0)}}
+.layer{position:absolute;inset:0;will-change:transform}
+.garden{position:absolute;left:50%;top:90px;width:max(100%,1440px);aspect-ratio:3200/1786;transform:translateX(-50%);background:url(garden.webp) center/100% 100% no-repeat}
+.lawnfill{position:absolute;left:0;right:0;bottom:0;top:calc(90px + max(100vw,1440px) * .557);background:var(--lawn-2)}
+
+.wrap{max-width:1440px;margin:0 auto;padding:0 var(--pad)}
+.nav{display:flex;align-items:center;justify-content:space-between;padding-top:26px;height:74px}
+.wordmark{font-family:var(--display);font-variation-settings:"wdth" 82;font-weight:800;font-size:30px;letter-spacing:-.04em;color:var(--hedge-deep);text-decoration:none}
+.trust{display:flex;gap:10px;list-style:none;margin:0;padding:0;font-size:13.5px;font-weight:500;color:var(--hedge-deep)}
+.trust li{padding:7px 13px;border-radius:999px;background:rgba(255,255,255,.42);-webkit-backdrop-filter:blur(14px) saturate(1.5);backdrop-filter:blur(14px) saturate(1.5);box-shadow:inset 0 0 0 1px rgba(255,255,255,.65)}
+.trust li:first-child{background:var(--hedge-deep);color:var(--vanilla);box-shadow:none}
+
+h1{font-family:var(--display);font-variation-settings:"wdth" 75;font-weight:800;font-size:clamp(56px,10.4vw,150px);line-height:.85;letter-spacing:-.006em;margin:16px 0 0 -6px;color:var(--hedge-deep);text-wrap:balance}
+h1 span{display:block}
+h1 span + span{color:var(--hedge)}
+
+.stage{display:grid;grid-template-columns:330px minmax(0,1fr);gap:44px;margin-top:34px;align-items:stretch}
+.pitch{display:flex;flex-direction:column;min-height:0}
+.lead{font-size:21px;line-height:1.32;font-weight:500;letter-spacing:-.012em;margin:0;color:var(--hedge-deep);max-width:20em}
+.invite{margin-top:auto;padding:8px;border-radius:22px;background:rgba(255,255,255,.4);-webkit-backdrop-filter:blur(22px) saturate(1.6);backdrop-filter:blur(22px) saturate(1.6);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),inset 0 1px 0 rgba(255,255,255,.9),0 24px 40px -22px rgba(22,38,10,.6)}
+.invite label{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.invite input{display:block;width:100%;height:50px;border:0;border-radius:15px;padding:0 16px;font:500 16px var(--ui);color:var(--ink);background:rgba(255,255,255,.92)}
+.invite input::placeholder{color:#5d6b52}
+.invite button{display:block;width:100%;height:52px;margin-top:8px;border:0;border-radius:15px;background:var(--raspberry);color:#fff;font:600 16.5px var(--ui);letter-spacing:-.01em;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.35),inset 0 -2px 0 rgba(0,0,0,.14);transition:background .15s}
+.invite button:hover{background:var(--raspberry-deep)}
+.invite .ok{display:none;margin:0;padding:14px 12px;font-size:15px;font-weight:500;line-height:1.35;color:var(--hedge-deep)}
+.invite.sent form{display:none}.invite.sent .ok{display:block}
+.trust.m{display:none}
+
+/* ---------- the glass ---------- */
+.glass{position:relative;border-radius:24px;padding:9px;background:linear-gradient(160deg,rgba(255,255,255,.5),rgba(255,255,255,.26));-webkit-backdrop-filter:blur(26px) saturate(1.7);backdrop-filter:blur(26px) saturate(1.7);box-shadow:inset 0 0 0 1px rgba(255,255,255,.72),inset 0 1.5px 0 rgba(255,255,255,.95),0 40px 70px -30px rgba(22,38,10,.75),0 8px 22px -10px rgba(22,38,10,.35);will-change:transform}
+.app{height:100%;display:flex;flex-direction:column;font-size:12.5px;line-height:1.38;color:#1c2713;border-radius:16px;overflow:hidden}
+.bar{display:flex;align-items:center;gap:18px;height:44px;padding:0 14px;background:rgba(255,255,255,.78);border-bottom:1px solid rgba(22,38,10,.08)}
+.bar b{font-family:var(--display);font-variation-settings:"wdth" 82;font-weight:800;font-size:17px;letter-spacing:-.04em;color:var(--hedge-deep)}
+.crumb{color:#56624b;font-weight:500;white-space:nowrap}
+.tabs{display:flex;gap:2px;margin-left:auto}
+.tabs span{padding:5px 10px;border-radius:8px;font-weight:500;color:#56624b;white-space:nowrap}
+.tabs .on{background:var(--hedge-deep);color:#fff}
+.tabs i{font-style:normal;display:inline-block;min-width:17px;margin-left:5px;padding:0 5px;border-radius:9px;background:var(--raspberry);color:#fff;font-size:11px;font-weight:600;text-align:center}
+.live{display:flex;align-items:center;gap:7px;font-weight:500;color:#2f5d12;white-space:nowrap}
+.dot{width:8px;height:8px;border-radius:50%;background:#4f9a1c;box-shadow:0 0 0 0 rgba(79,154,28,.5);animation:pulse 2s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 7px rgba(79,154,28,0)}100%{box-shadow:0 0 0 0 rgba(79,154,28,0)}}
+
+.cols{flex:1;display:grid;grid-template-columns:226px minmax(0,1fr) 262px;min-height:0}
+.col{padding:12px;min-width:0}
+.col h3{margin:2px 2px 9px;font:600 12px var(--ui);color:#56624b;display:flex;justify-content:space-between}
+.rail{background:rgba(255,255,255,.5);border-right:1px solid rgba(22,38,10,.07)}
+.agent{position:relative;padding:9px 10px 10px;border-radius:11px;margin-bottom:6px}
+.agent.on{background:#fff;box-shadow:0 1px 0 rgba(22,38,10,.06),0 8px 18px -12px rgba(22,38,10,.4)}
+.agent .n{display:flex;align-items:center;gap:8px;font-weight:600;font-size:13.5px;letter-spacing:-.01em}
+.glyph{width:16px;height:16px;border-radius:5px;background:var(--c);flex:none;position:relative}
+.glyph::after{content:"";position:absolute;inset:4.5px;border-radius:50%;background:#fff;animation:blink 1.8s ease-in-out infinite;animation-delay:var(--d,0s)}
+@keyframes blink{50%{transform:scale(.45);opacity:.7}}
+.agent .t{margin:4px 0 7px;color:#4b5741;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meter{display:flex;align-items:center;gap:8px;font-size:11.5px;color:#56624b;font-variant-numeric:tabular-nums}
+.track{flex:1;height:5px;border-radius:3px;background:rgba(22,38,10,.1);overflow:hidden}
+.track u{display:block;height:100%;width:var(--p);border-radius:3px;background:var(--c);transition:width .8s cubic-bezier(.2,.7,.2,1);position:relative;overflow:hidden}
+.track u::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.65),transparent);transform:translateX(-100%);animation:sheen 2.6s infinite}
+@keyframes sheen{to{transform:translateX(100%)}}
+
+.run{background:rgba(255,255,255,.9);padding:14px 18px 12px;display:flex;flex-direction:column}
+.run header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding-bottom:10px;border-bottom:1px solid rgba(22,38,10,.08)}
+.run h2{margin:0;font:600 15.5px/1.25 var(--ui);letter-spacing:-.015em;color:var(--ink)}
+.run h2 em{font-style:normal;color:#6a7560;font-weight:500;margin-right:6px}
+.run header p{margin:3px 0 0;color:#56624b}
+.state{flex:none;padding:4px 9px;border-radius:999px;background:#e6f1d6;color:#2f5d12;font-weight:600;font-size:11.5px;white-space:nowrap}
+.steps{list-style:none;margin:10px 0 0;padding:0;position:relative}
+.steps::before{content:"";position:absolute;left:6.5px;top:8px;bottom:10px;width:1px;background:rgba(22,38,10,.14)}
+.steps li{position:relative;padding:0 0 9px 24px}
+.steps li::before{content:"";position:absolute;left:0;top:2px;width:14px;height:14px;border-radius:50%;background:#4C7A1E url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M4 7.2l2.1 2.1L10.2 5' fill='none' stroke='%23fff' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat}
+.steps li.live-step::before{background:#fff;box-shadow:inset 0 0 0 4px #4C7A1E;animation:blink 1.4s ease-in-out infinite}
+.steps time{color:#7a846f;font-variant-numeric:tabular-nums;margin-right:6px}
+.steps strong{font-weight:600;color:var(--ink)}
+.src{display:inline-flex;align-items:center;gap:5px;margin:4px 4px 0 0;padding:2px 8px 2px 3px;border-radius:7px;background:#f1f4ea;box-shadow:inset 0 0 0 1px rgba(22,38,10,.09);font-size:11.5px;font-weight:500;color:#33402a;white-space:nowrap}
+.src s{text-decoration:none;display:grid;place-items:center;width:15px;height:15px;border-radius:4px;background:var(--hedge-deep);color:#fff;font-size:9.5px;font-weight:700}
+.caret{display:inline-block;width:1.5px;height:1em;margin-left:1px;background:var(--ink);vertical-align:-2px;animation:caret 1s steps(1) infinite}
+@keyframes caret{50%{opacity:0}}
+.memo{margin-top:auto;padding:10px 12px;border-radius:11px;background:#f6f8f0;box-shadow:inset 0 0 0 1px rgba(22,38,10,.08)}
+.memo h4{margin:0 0 3px;font:600 11.5px var(--ui);color:#56624b}
+.memo p{margin:0;color:#26311d}
+.memo sup{font-size:9.5px;font-weight:700;color:#fff;background:#4C7A1E;border-radius:4px;padding:0 4px;margin:0 1px;vertical-align:2px;line-height:1.5;display:inline-block}
+
+.todo{background:rgba(255,255,255,.5);border-left:1px solid rgba(22,38,10,.07)}
+.todo h3 i{font-style:normal;color:var(--raspberry-deep)}
+.card{padding:11px 12px 12px;border-radius:12px;background:#fff;margin-bottom:8px;box-shadow:0 1px 0 rgba(22,38,10,.06),0 8px 18px -12px rgba(22,38,10,.4)}
+.card .who{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:500;color:#56624b}
+.card .who .glyph{width:10px;height:10px;border-radius:3px}.card .who .glyph::after{display:none}
+.card h5{margin:5px 0 3px;font:600 13px/1.3 var(--ui);letter-spacing:-.01em;color:var(--ink)}
+.card p{margin:0;color:#4b5741}
+.acts{display:flex;gap:6px;margin-top:9px}
+.acts button{height:30px;padding:0 11px;border-radius:8px;border:0;font:600 12px var(--ui);cursor:pointer;background:#eef1e7;color:#26311d;white-space:nowrap}
+.acts .go{background:var(--raspberry);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.3)}
+.acts .go:hover{background:var(--raspberry-deep)}
+.card.done{background:#eef6e2}
+.card.done .acts{display:none}
+.card .stamp{display:none;margin-top:8px;font-weight:600;color:#2f5d12}
+.card.done .stamp{display:block}
+
+/* ---------- section two: pink sky ---------- */
+.meadow{position:relative;background:var(--pink);color:var(--hedge-deep);padding:120px 0 0;isolation:isolate;overflow:hidden}
+.meadow::before{content:"";position:absolute;inset:0;z-index:-1;opacity:.22;mix-blend-mode:multiply;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 .6 0 0 0 0 .4 0 0 0 0 .5 0 0 0 .9 -.35'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E")}
+.meadow h2{font-family:var(--display);font-variation-settings:"wdth" 75;font-weight:800;font-size:clamp(44px,8.1vw,117px);line-height:.88;letter-spacing:-.006em;margin:0 0 0 -4px;text-wrap:balance}
+.meadow h2 span{display:block;color:var(--raspberry)}
+.roster{list-style:none;margin:84px 0 0;padding:0;border-top:2px solid var(--hedge-deep)}
+.roster li{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,4fr) minmax(0,4fr);gap:40px;align-items:center;padding:20px 0 24px;border-bottom:2px solid var(--hedge-deep)}
+.roster h3{font-family:var(--display);font-variation-settings:"wdth" 75;font-weight:800;font-size:clamp(40px,5.8vw,84px);line-height:.92;letter-spacing:-.006em;margin:0;display:flex;align-items:center;gap:.28em}
+.roster h3::before{content:"";width:.3em;height:.3em;border-radius:.09em;background:var(--c);flex:none;margin-top:.08em}
+.roster p{margin:0;font-size:20px;line-height:1.32;font-weight:500;letter-spacing:-.012em;max-width:19em}
+.sample{display:flex;align-items:center;gap:10px;padding:12px 15px;border-radius:14px;font-size:13.5px;font-weight:500;line-height:1.3;color:#26311d;background:rgba(255,255,255,.55);box-shadow:inset 0 0 0 1px rgba(255,255,255,.8),inset 0 1.5px 0 #fff,0 14px 24px -18px rgba(120,30,70,.5)}
+.sample .dot{flex:none;background:var(--c);box-shadow:none;animation:blink 1.8s ease-in-out infinite}
+.foot{display:flex;justify-content:space-between;align-items:center;gap:24px;margin-top:64px;font-size:15px;font-weight:500}
+.foot a.cta{display:inline-flex;align-items:center;height:52px;padding:0 24px;border-radius:15px;background:var(--raspberry);color:#fff;font-weight:600;font-size:16.5px;text-decoration:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.35),inset 0 -2px 0 rgba(0,0,0,.14)}
+.band{height:calc(max(100vw,1000px) * .2);margin-top:8px;background:url(garden.webp) 22% 67.5%/max(100vw,1000px) auto no-repeat}
+
+/* floating notice */
+.notice{position:absolute;right:-14px;top:-74px;width:286px;padding:11px 13px 12px;border-radius:16px;font-size:12.5px;line-height:1.36;color:#26311d;background:rgba(255,255,255,.62);-webkit-backdrop-filter:blur(20px) saturate(1.7);backdrop-filter:blur(20px) saturate(1.7);box-shadow:inset 0 0 0 1px rgba(255,255,255,.8),inset 0 1.5px 0 #fff,0 26px 40px -22px rgba(22,38,10,.7);transition:opacity .45s,transform .45s}
+.notice.swap{opacity:0;transform:translateY(6px)}
+.notice .who{display:flex;align-items:center;gap:7px;font-weight:600;font-size:12.5px;color:var(--ink);margin-bottom:2px}
+.notice .who .glyph{width:12px;height:12px;border-radius:4px}.notice .who .glyph::after{inset:3.5px}
+.notice .who span:last-child{margin-left:auto;font-weight:500;color:#56624b}
+
+/* ---------- mobile ---------- */
+@media (max-width:1100px){
+  .stage{grid-template-columns:minmax(0,1fr);gap:28px}
+  .pitch{min-height:0}
+  .invite{margin-top:22px;max-width:420px}
+  .cols{grid-template-columns:200px minmax(0,1fr)}
+  .todo{grid-column:1/-1;border-left:0;border-top:1px solid rgba(22,38,10,.07);display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .todo h3{grid-column:1/-1;margin-bottom:0}
+  .hero{padding-bottom:70px}
+}
+@media (max-width:700px){
+  :root{--pad:18px}
+  .hero{min-height:0;padding-bottom:44px}
+  .nav{padding-top:14px;height:56px}
+  .wordmark{font-size:26px}
+  .nav .trust li:not(:first-child){display:none}
+  .nav .trust{font-size:12.5px}
+  h1{font-size:clamp(50px,17.6vw,76px);margin:14px 0 0 -2px;line-height:.87}
+  .stage{margin-top:20px;gap:20px}
+  .lead{font-size:18px}
+  .invite{margin-top:18px;display:block}
+  .invite form{display:grid;grid-template-columns:1fr auto;gap:6px}
+  .invite input{height:48px;font-size:16px;padding:0 12px}
+  .invite button{margin:0;height:48px;width:auto;padding:0 14px;font-size:15px}
+  .trust.m{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;font-size:12.5px}
+  .trust.m li:first-child{display:none}
+  .garden{top:430px;width:1180px;left:-70px;transform:none}
+  .lawnfill{top:1080px}
+  .glass{border-radius:20px;padding:7px}
+  .bar{gap:10px}
+  .crumb,.tabs span:not(.on):not(.dec){display:none}
+  .cols{display:block}
+  .rail{border-right:0;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:6px;padding:10px}
+  .agent{min-width:0}
+  .live{margin-left:auto}
+  .tabs{margin-left:0}
+  .rail h3{display:none}
+  .agent{margin:0;background:rgba(255,255,255,.75)}
+  .agent .t{font-size:11.5px}
+  .run{padding:12px 12px 12px}
+  .todo{display:block;padding:10px}
+  .todo h3{margin-bottom:9px}
+  .todo .card:nth-of-type(n+3){display:none}
+  .meadow{padding:72px 0 0}
+  .notice{display:none}
+  .roster{margin-top:48px}
+  .roster li{grid-template-columns:1fr;gap:10px;padding:20px 0 22px}
+  .roster p{font-size:17px}
+  .foot{flex-direction:column;align-items:flex-start;margin-top:44px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="world" aria-hidden="true">
+    <div class="layer" data-depth="-18"><div class="clouds far"></div></div>
+    <div class="layer" data-depth="-34"><div class="clouds near"></div></div>
+    <div class="layer" data-depth="-9"><div class="garden"></div><div class="lawnfill"></div></div>
+  </div>
+
+  <div class="wrap">
+    <nav class="nav" aria-label="Oxten">
+      <a class="wordmark" href="#">Oxten</a>
+      <ul class="trust">
+        <li>Invite only</li>
+        <li>Backed by Google Ventures</li>
+        <li>From the team behind Complyance</li>
+      </ul>
+    </nav>
+
+    <h1><span>Standalone GRC agents.</span><span>Next to any platform.</span></h1>
+
+    <div class="stage">
+      <div class="pitch">
+        <p class="lead">Domain-trained Oxten agents do the GRC work you didn't think you could hand off.</p>
+        <div class="invite" id="invite">
+          <form>
+            <label for="email">Work email</label>
+            <input id="email" type="email" required placeholder="Work email" autocomplete="email">
+            <button type="submit">Request an invite</button>
+          </form>
+          <p class="ok" role="status">Invite requested. We'll write to you at that address.</p>
+        </div>
+        <ul class="trust m">
+          <li>Invite only</li>
+          <li>Backed by Google Ventures</li>
+          <li>From the team behind Complyance</li>
+        </ul>
+      </div>
+
+      <div class="glass" data-depth="7">
+        <div class="notice" id="notice" aria-hidden="true">
+          <div class="who"><span class="glyph" style="--c:#2B86AB"></span><span class="nm">Risk</span><span>just now</span></div>
+          <div class="msg">Finished the CFO interview. 4 risks drafted, 1 needs your read.</div>
+        </div>
+        <div class="app" role="img" aria-label="The Oxten workspace: four agents working on a SOC 2 audit, a live run by the Evidence agent with cited sources, and three items waiting for a human decision.">
+          <div class="bar">
+            <b>Oxten</b>
+            <span class="crumb">SOC 2 Type II, FY26 fieldwork</span>
+            <div class="tabs"><span class="on">Work</span><span class="dec">Decisions<i id="count">3</i></span><span>Sources</span><span>Audit trail</span></div>
+            <span class="live"><span class="dot"></span>4 agents working</span>
+          </div>
+          <div class="cols">
+            <div class="col rail">
+              <h3>Agents</h3>
+              <div class="agent on" style="--c:#4C7A1E;--p:60%">
+                <div class="n"><span class="glyph"></span>Evidence</div>
+                <div class="t">Auditor request list</div>
+                <div class="meter"><span class="track"><u></u></span><span>41 of 68</span></div>
+              </div>
+              <div class="agent" style="--c:#2B86AB;--p:67%;--d:.4s">
+                <div class="n"><span class="glyph"></span>Risk</div>
+                <div class="t">Interviewing the VP of Infrastructure</div>
+                <div class="meter"><span class="track"><u></u></span><span>6 of 9</span></div>
+              </div>
+              <div class="agent" id="a-tp" style="--c:#C4589A;--p:63%;--d:.8s">
+                <div class="n"><span class="glyph"></span>Third party</div>
+                <div class="t">Reading a SOC 2 report, page <span class="pg">31</span> of 84</div>
+                <div class="meter"><span class="track"><u></u></span><span>12 of 19</span></div>
+              </div>
+              <div class="agent" id="a-q" style="--c:#C98A1B;--p:88%;--d:1.2s">
+                <div class="n"><span class="glyph"></span>Questionnaires</div>
+                <div class="t">Customer security questionnaire</div>
+                <div class="meter"><span class="track"><u></u></span><span><span class="num">187</span> of 212</span></div>
+              </div>
+            </div>
+
+            <div class="col run">
+              <header>
+                <div>
+                  <h2><em>PBC-041</em>Q3 user access review</h2>
+                  <p>Evidence agent. Requested by the external auditor, due Nov 21.</p>
+                </div>
+                <span class="state">Working, 5 min</span>
+              </header>
+              <ol class="steps">
+                <li><time>10:02</time>Read the request and mapped it to control <strong>AC-07</strong>, logical access review.</li>
+                <li><time>10:03</time>Pulled the Q3 review export. <strong>1,284 accounts</strong>, 37 reviewers, all signed off.<br><span class="src"><s>O</s>Okta, access-review-q3.csv</span></li>
+                <li><time>10:05</time>Compared against HR terminations. <strong>3 accounts</strong> stayed active past the 24-hour window, none with a login after termination.<br><span class="src"><s>W</s>Workday, terminations Q3</span><span class="src"><s>O</s>Okta, system log</span></li>
+                <li class="live-step"><time>10:06</time><span id="typing">Drafting the evidence memo for the auditor</span><span class="caret"></span></li>
+              </ol>
+              <div class="memo">
+                <h4>Draft memo</h4>
+                <p>The Q3 review covered 1,284 accounts across 14 in-scope systems<sup>1</sup>. Three late deprovisioning exceptions were found and remediated within 4 days<sup>2</sup><sup>3</sup>.</p>
+              </div>
+            </div>
+
+            <div class="col todo">
+              <h3>Needs your decision <i id="count2">3</i></h3>
+              <div class="card" id="approve-card">
+                <div class="who"><span class="glyph" style="--c:#4C7A1E"></span>Evidence</div>
+                <h5>Send PBC-041 to the auditor with 3 exceptions disclosed?</h5>
+                <p>Memo, 2 exports, 4 citations.</p>
+                <div class="acts"><button class="go" id="approve" type="button">Approve and send</button><button type="button">Open</button></div>
+                <div class="stamp">Approved and sent. Logged to the audit trail.</div>
+              </div>
+              <div class="card">
+                <div class="who"><span class="glyph" style="--c:#C4589A"></span>Third party</div>
+                <h5>Halvorsen Freight: approve with conditions</h5>
+                <p>Pen test is 14 months old.</p>
+                <div class="acts"><button type="button">Approve</button><button type="button">Open</button></div>
+              </div>
+              <div class="card">
+                <div class="who"><span class="glyph" style="--c:#C98A1B"></span>Questionnaires</div>
+                <h5>4 answers need an owner</h5>
+                <p>No source on APAC data residency.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="meadow">
+  <div class="wrap">
+    <h2>GRC kept being asked to do more with less. <span>And your team stays the same size.</span></h2>
+    <ul class="roster">
+      <li style="--c:#4C7A1E">
+        <h3>Evidence</h3>
+        <p>Works the auditor's evidence request list.</p>
+        <div class="sample"><span class="dot"></span>Sample run: 41 of 68 requests fulfilled, 3 waiting for sign-off</div>
+      </li>
+      <li style="--c:#2B86AB">
+        <h3>Risk</h3>
+        <p>Conducts enterprise risk assessments by interviewing leaders.</p>
+        <div class="sample"><span class="dot"></span>Sample run: 6 of 9 leader interviews done, 23 risks drafted</div>
+      </li>
+      <li style="--c:#C4589A">
+        <h3>Third party</h3>
+        <p>Runs vendor security reviews.</p>
+        <div class="sample"><span class="dot"></span>Sample run: 12 of 19 vendors reviewed, 2 need conditions</div>
+      </li>
+      <li style="--c:#C98A1B">
+        <h3>Questionnaires</h3>
+        <p>Answers customer security questionnaires.</p>
+        <div class="sample"><span class="dot"></span>Sample run: 187 of 212 answers drafted, each with a source</div>
+      </li>
+    </ul>
+    <div class="foot">
+      <span>Oxten. Invite only. Backed by Google Ventures. From the team behind Complyance.</span>
+      <a class="cta" href="#email">Request an invite</a>
+    </div>
+  </div>
+  <div class="band" aria-hidden="true"></div>
+</section>
+
+<script>
+(function(){
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  document.querySelector('#invite form').addEventListener('submit', function(e){
+    e.preventDefault(); document.getElementById('invite').classList.add('sent');
+  });
+  document.getElementById('approve').addEventListener('click', function(){
+    document.getElementById('approve-card').classList.add('done');
+    document.getElementById('count').textContent = '2';
+    document.getElementById('count2').textContent = '2';
+  });
+  if (reduce) return;
+
+  /* parallax: sky, garden and glass sit at different depths */
+  var layers = [].slice.call(document.querySelectorAll('[data-depth]'));
+  var tx = 0, cx = 0, sy = 0, raf = 0;
+  function frame(){
+    cx += (tx - cx) * .07;
+    layers.forEach(function(l){
+      var d = +l.dataset.depth;
+      var y = d < 0 ? sy * (-d / 90) : -sy * .02;
+      l.style.transform = 'translate3d(' + (cx * d).toFixed(2) + 'px,' + y.toFixed(2) + 'px,0)';
+    });
+    raf = Math.abs(tx - cx) > .001 ? requestAnimationFrame(frame) : 0;
+  }
+  function kick(){ if (!raf) raf = requestAnimationFrame(frame); }
+  addEventListener('pointermove', function(e){ tx = e.clientX / innerWidth - .5; kick(); }, {passive:true});
+  addEventListener('scroll', function(){ sy = Math.min(scrollY, 900); cx += .002; kick(); }, {passive:true});
+
+  /* agents visibly working */
+  var lines = ['Drafting the evidence memo for the auditor','Attaching 2 exports and the system log extract','Checking the memo against the auditor\'s wording','Citing each figure back to its source'];
+  var el = document.getElementById('typing'), li = 0;
+  function type(){
+    var s = lines[li = (li + 1) % lines.length], i = 0;
+    el.textContent = '';
+    (function tick(){ el.textContent = s.slice(0, ++i); if (i < s.length) setTimeout(tick, 26); else setTimeout(type, 2600); })();
+  }
+  setTimeout(type, 2600);
+
+  var notes = [['Risk','#2B86AB','Finished the CFO interview. 4 risks drafted, 1 needs your read.'],['Third party','#C4589A','Halvorsen Freight review is ready. 2 conditions proposed.'],['Questionnaires','#C98A1B','Reused 31 approved answers from the last SIG. 4 need an owner.'],['Evidence','#4C7A1E','PBC-040 accepted by the auditor. Moving to PBC-041.']];
+  var nt = document.getElementById('notice'), ni = 0;
+  setInterval(function(){
+    nt.classList.add('swap');
+    setTimeout(function(){
+      var x = notes[ni = (ni + 1) % notes.length];
+      nt.querySelector('.nm').textContent = x[0]; nt.querySelector('.glyph').style.setProperty('--c', x[1]); nt.querySelector('.msg').textContent = x[2];
+      nt.classList.remove('swap');
+    }, 480);
+  }, 5200);
+
+  var q = document.querySelector('#a-q .num'), qa = document.getElementById('a-q'), n = 187;
+  var pg = document.querySelector('#a-tp .pg'), p = 31;
+  setInterval(function(){
+    if (n < 212){ n++; q.textContent = n; qa.style.setProperty('--p', (n / 212 * 100).toFixed(1) + '%'); }
+    if (p < 84 && Math.random() > .4){ pg.textContent = ++p; }
+  }, 1700);
+})();
+</script>
+</body>
+</html>
