@@ -80,6 +80,7 @@ function Index() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [pending, setPending] = useState(false);
+  const [formInView, setFormInView] = useState(true);
   const save = useServerFn(joinWaitlist);
   async function submit(e: FormEvent) {
     e.preventDefault();
@@ -143,6 +144,21 @@ function Index() {
       )}
     </form>
   );
+  // The floating invite button steps aside whenever an invite form is already on screen.
+  useEffect(() => {
+    const forms = root.current?.querySelectorAll(".invite-form");
+    if (!forms) return;
+    const visible = new Set<Element>();
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) visible.add(entry.target);
+        else visible.delete(entry.target);
+      });
+      setFormInView(visible.size > 0);
+    });
+    forms.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
   // A plot is planted when it comes into view: the one piece of motion outside the workspace.
   useEffect(() => {
     const targets = root.current?.querySelectorAll<HTMLElement>("[data-plant]");
@@ -173,7 +189,7 @@ function Index() {
         </span>
         <button
           type="button"
-          className="header-invite"
+          className={`header-invite ${formInView ? "header-invite-hidden" : ""}`}
           onClick={() => {
             finalInput.current?.scrollIntoView({ behavior: "smooth", block: "center" });
             finalInput.current?.focus({ preventScroll: true });
@@ -184,14 +200,16 @@ function Index() {
       </header>
       <main>
         <section className="hero">
+          <h1>
+            Standalone GRC agents.
+            <br />
+            <span className="quiet">Next to any platform.</span>
+          </h1>
           <div className="hero-copy">
-            <h1>
-              Standalone GRC agents. <span className="quiet">Next to any platform.</span>
-            </h1>
+            <p className="lead">
+              Domain-trained Oxten agents do the GRC work you didn't think you could hand off.
+            </p>
             <div className="hero-side">
-              <p className="lead">
-                Domain-trained Oxten agents do the GRC work you didn't think you could hand off.
-              </p>
               {form("invite-email")}
               <ul className="trust">
                 <li>Invite only</li>

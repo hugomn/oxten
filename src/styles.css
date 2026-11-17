@@ -61,7 +61,7 @@
   --s-body: 17px;
   --s-lead: clamp(19px, 1.7vw, 24px);
   --s-headline: clamp(36px, 4.6vw, 64px);
-  --s-display: clamp(44px, 6.3vw, 88px);
+  --s-display: clamp(40px, 7.4vw, 108px);
   --s-figure: clamp(88px, 11.5vw, 168px);
   --gutter: clamp(20px, 4.5vw, 72px);
   --wide: 1360px;
@@ -201,10 +201,16 @@ h2 {
 }
 .hero-copy {
   display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-  gap: clamp(24px, 5vw, 80px);
-  align-items: end;
-  margin-bottom: clamp(32px, 6vh, 64px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(20px, 5vw, 80px);
+  align-items: start;
+  margin: clamp(22px, 4vh, 40px) 0 clamp(32px, 6vh, 60px);
+}
+.hero-copy .lead {
+  max-width: 22em;
+}
+.hero-copy .invite-form {
+  margin-top: 0;
 }
 .trust {
   display: flex;
@@ -326,7 +332,11 @@ h2 {
 .ws-cover {
   border-radius: 12px;
   overflow: hidden;
-  max-height: 150px;
+  aspect-ratio: 6.4 / 1;
+}
+.ws-cover .plot {
+  top: 50%;
+  translate: 0 -50%;
 }
 .ws-head {
   display: flex;
@@ -545,6 +555,10 @@ h2 {
   white-space: nowrap;
   font-variant-numeric: lining-nums;
 }
+.figure-word {
+  font-size: 0.56em;
+  letter-spacing: -0.06em;
+}
 .unit {
   font-size: var(--s-lead);
   font-weight: 400;
@@ -708,4 +722,11 @@ h2 {
   border-radius: 999px;
   border: 1px solid var(--line);
   white-space: nowrap;
+}
+.header-invite {
+  transition: opacity 0.25s;
+}
+.header-invite-hidden {
+  opacity: 0;
+  pointer-events: none;
 }

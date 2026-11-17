@@ -1,27 +1,30 @@
 import type { CSSProperties } from "react";
-import lushGarden from "@/assets/oxten-garden-lush.jpg";
-import bareGarden from "@/assets/oxten-garden-bare.png";
+import lushGarden from "@/assets/garden-lush.webp";
+import bareGarden from "@/assets/garden-bare.webp";
 
-const W = 1024;
-const H = 1920;
+// Regions are measured on the 3072 x 5504 master painting.
+const W = 3072;
+const H = 5504;
 
 // Regions of the painting, in painting pixels. The painting is portrait and is shown lying
 // on its side, so a region's height becomes its width on screen.
 export type Region = { x: number; y: number; width: number; height: number };
 
 export const plots: Region[] = [
-  { x: 285, y: 602, width: 151, height: 590 },
-  { x: 605, y: 602, width: 149, height: 590 },
-  { x: 284, y: 1085, width: 154, height: 600 },
-  { x: 605, y: 190, width: 152, height: 600 },
+  { x: 800, y: 1680, width: 588, height: 1848 },
+  { x: 1690, y: 1684, width: 568, height: 1848 },
+  { x: 806, y: 3040, width: 564, height: 1824 },
+  { x: 1700, y: 540, width: 552, height: 1800 },
 ];
-export const wholeGarden: Region = { x: 108, y: 56, width: 808, height: 1808 };
+export const wholeGarden: Region = { x: 170, y: 30, width: 2730, height: 5444 };
+
+const pct = (value: number) => `${(value * 100).toFixed(3)}%`;
 
 function crop(region: Region, image: string): CSSProperties {
   return {
     backgroundImage: `url(${image})`,
-    backgroundSize: `${(W / region.width) * 100}% ${(H / region.height) * 100}%`,
-    backgroundPosition: `${(region.x / (W - region.width)) * 100}% ${(region.y / (H - region.height)) * 100}%`,
+    backgroundSize: `${pct(W / region.width)} ${pct(H / region.height)}`,
+    backgroundPosition: `${pct(region.x / (W - region.width))} ${pct(region.y / (H - region.height))}`,
   };
 }
 

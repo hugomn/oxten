@@ -110,7 +110,7 @@ const agents: Agent[] = [
   },
 ];
 
-const RUN_MS = 7000;
+const RUN_MS = 9000;
 
 export function Workspace() {
   const [active, setActive] = useState(0);
