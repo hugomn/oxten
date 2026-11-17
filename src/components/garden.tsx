@@ -1,41 +1,54 @@
-import { memo } from "react";
+import type { CSSProperties } from "react";
 import lushGarden from "@/assets/oxten-garden-lush.jpg";
 import bareGarden from "@/assets/oxten-garden-bare.png";
 
-// Planting regions in painting pixels. The two paintings share pixels outside them.
-// The garden is shown lying on its side, so the order here is the reading order on screen:
-// left column, wide middle column, right column, upper bed first.
-export const beds = [
-  { x: 284, y: 1310, width: 154, height: 341 },
-  { x: 606, y: 1310, width: 148, height: 341 },
+const W = 1024;
+const H = 1920;
+
+// Regions of the painting, in painting pixels. The painting is portrait and is shown lying
+// on its side, so a region's height becomes its width on screen.
+export type Region = { x: number; y: number; width: number; height: number };
+
+export const plots: Region[] = [
   { x: 285, y: 602, width: 151, height: 590 },
   { x: 605, y: 602, width: 149, height: 590 },
-  { x: 285, y: 207, width: 155, height: 304 },
-  { x: 605, y: 207, width: 152, height: 304 },
+  { x: 284, y: 1085, width: 154, height: 600 },
+  { x: 605, y: 190, width: 152, height: 600 },
 ];
+export const wholeGarden: Region = { x: 108, y: 56, width: 808, height: 1808 };
 
-export const Garden = memo(function Garden() {
+function crop(region: Region, image: string): CSSProperties {
+  return {
+    backgroundImage: `url(${image})`,
+    backgroundSize: `${(W / region.width) * 100}% ${(H / region.height) * 100}%`,
+    backgroundPosition: `${(region.x / (W - region.width)) * 100}% ${(region.y / (H - region.height)) * 100}%`,
+  };
+}
+
+// One piece of the garden. With `plantable`, it starts as the bare plan and is planted
+// (bare to lush, swept along its length) when its work is done.
+export function Plot({
+  region,
+  plantable = false,
+  className = "",
+}: {
+  region: Region;
+  plantable?: boolean;
+  className?: string;
+}) {
   return (
-    <div className="garden-window" aria-hidden="true">
-      <div className="garden-camera">
-        <div className="garden-art">
-          <img src={bareGarden} width={1024} height={1920} alt="" fetchPriority="high" />
-          {beds.map((bed, i) => (
-            <div
-              key={i}
-              className={`bed bed-${i}`}
-              style={{
-                left: bed.x,
-                top: bed.y,
-                width: bed.width,
-                height: bed.height,
-                backgroundImage: `url(${lushGarden})`,
-                backgroundPosition: `-${bed.x}px -${bed.y}px`,
-              }}
-            />
-          ))}
-        </div>
+    <div
+      className={`plot ${className}`}
+      style={{ aspectRatio: `${region.height} / ${region.width}` }}
+      aria-hidden="true"
+    >
+      <div className="plot-turn">
+        {plantable && <div className="plot-layer" style={crop(region, bareGarden)} />}
+        <div
+          className={`plot-layer ${plantable ? "plot-lush" : ""}`}
+          style={crop(region, lushGarden)}
+        />
       </div>
     </div>
   );
-});
+}
