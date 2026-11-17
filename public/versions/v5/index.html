@@ -322,6 +322,7 @@ section{position:relative;color:var(--fg)}
 .invite .btn{height:48px;padding:0 20px}
 .invite .ok{display:none;margin:0;padding:13px 14px;font-size:15px;line-height:1.4;color:var(--fg)}
 .invite.sent form{display:none}.invite.sent .ok{display:block}
+.invite .err{margin:0;padding:8px 14px 6px;font-size:14px;line-height:1.4;color:var(--fg)}.invite .err:empty{display:none}
 .trust{list-style:none;display:flex;flex-wrap:wrap;row-gap:8px;margin:var(--s5) 0 0;padding:0 0 0 2px;font-size:13.5px;line-height:1.2;color:var(--fg2);white-space:nowrap}
 .trust li{padding:0 14px;border-left:1px solid var(--line)}
 .trust li:first-child{padding-left:0;border-left:0}
@@ -1023,7 +1024,21 @@ footer{font-size:11px}
     form.addEventListener('submit', function(e){
       e.preventDefault();
       if (!input.checkValidity()){ input.focus(); input.reportValidity(); return; }
-      box.classList.add('sent'); ok.focus();
+      var endpoint = window.OXTEN_WAITLIST, btn = form.querySelector('button');
+      var err = box.querySelector('.err');
+      if (!err){ err = document.createElement('p'); err.className = 'err'; err.setAttribute('role', 'alert'); box.appendChild(err); }
+      err.textContent = '';
+      if (!endpoint){ box.classList.add('sent'); ok.focus(); return; }
+      if (btn.disabled) return;
+      btn.disabled = true;
+      fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: input.value }) })
+        .then(function(r){ return r.json().catch(function(){ return {}; }); })
+        .then(function(d){
+          if (d && d.success){ all('.invite').forEach(function(x){ x.classList.add('sent'); }); ok.focus(); }
+          else { err.textContent = (d && d.error) || "We couldn't save your request. Try again."; input.focus(); }
+        })
+        .catch(function(){ err.textContent = "We couldn't save your request. Try again."; })
+        .then(function(){ btn.disabled = false; });
     });
   });
 
