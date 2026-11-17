@@ -1192,7 +1192,8 @@ footer{font-size:11px}
     }
     /* only the lights in play are painted: one not yet risen, or fully covered by the next, is switched off */
     for (j = 0; j < layers.length; j++){
-      var B = Bs[j], on = B < vh + BLEED && !(j < layers.length - 1 && Bs[j + 1] <= BLEED - F);
+      /* a light is only switched off once the light two above it has fully arrived, so nothing ever disappears from behind a soft edge */
+      var B = Bs[j], on = B < vh + BLEED && !(j < layers.length - 2 && Bs[j + 2] <= BLEED - F);
       var key = on ? B : 'off';
       if (key === lastB[j]) continue;
       lastB[j] = key;
@@ -1201,7 +1202,7 @@ footer{font-size:11px}
       layers[j][0].style.transform = 'translate3d(0,' + B.toFixed(1) + 'px,0)';
       layers[j][1].style.transform = 'translate3d(0,' + (-B).toFixed(1) + 'px,0)';
     }
-    var baseOn = Bs[0] > BLEED - F;
+    var baseOn = Bs[1] > BLEED - F;
     if (baseOn !== lastBase){ lastBase = baseOn; base.style.visibility = baseOn ? '' : 'hidden'; }
 
     /* the sun comes up behind the pavilion with the sunrise band, brightest as it clears the horizon, then crosses the sky and sets */
