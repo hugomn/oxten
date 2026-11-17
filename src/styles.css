@@ -63,9 +63,10 @@
     margin: 0;
     background: var(--background);
     color: var(--foreground);
-    font-family: var(--font-sans);
-    font-weight: 300;
-    letter-spacing: 0;
+    font-family: var(--body);
+    font-weight: var(--body-weight);
+    letter-spacing: var(--body-tracking);
+    font-size-adjust: var(--body-adjust);
   }
   button,
   input {
@@ -124,10 +125,10 @@
   z-index: 10;
 }
 .wordmark {
-  font: 48px/0.95 var(--font-display);
+  --fs: 48px;
 }
 .brand-note {
-  font: 300 14px/1.6 var(--font-sans);
+  font: 300 14px/1.6 var(--body);
   color: var(--muted-foreground);
   max-width: 260px;
 }
@@ -150,15 +151,14 @@
 }
 .hero-moment h1 {
   margin: 0;
-  font: 112px/0.88 var(--font-display);
-  font-weight: 400;
+  --fs: 112px;
 }
 .hero-moment h1 > span {
   display: block;
   white-space: nowrap;
 }
 .hero-moment h1 .hero-secondary {
-  font-size: 43px;
+  --fs: 43px;
   line-height: 1.1;
   margin-top: 22px;
 }
@@ -204,7 +204,7 @@
   border-radius: 3px;
   background: var(--primary);
   color: var(--primary-foreground);
-  font: 500 17px/1 var(--font-sans);
+  font: 500 17px/1 var(--body);
   display: flex;
   justify-content: space-between;
   gap: 24px;
@@ -248,7 +248,7 @@
   transform: rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
   transition: transform 0.45s ease;
   color: var(--glass-ink);
-  font: 11px/1.5 var(--font-mono);
+  font: 11px/1.5 var(--ui);
   overflow: hidden;
 }
 .pane-top {
@@ -379,18 +379,17 @@
   max-width: 470px;
 }
 .big-number {
-  font: 180px/0.9 var(--font-display);
+  --fs: 180px;
   white-space: nowrap;
   margin: 22px 0 30px;
 }
 .moment h2 {
-  font: 62px/0.98 var(--font-display);
-  font-weight: 400;
+  --fs: 62px;
   margin: 0 0 18px;
   text-wrap: balance;
 }
 .moment .arrival-heading {
-  font-size: 110px;
+  --fs: 110px;
   max-width: 480px;
 }
 .extra-list {
@@ -407,12 +406,12 @@
   border-bottom: 1px solid var(--border);
 }
 .extra-index {
-  font: 300 16px/1.8 var(--font-sans);
+  font: 300 16px/1.8 var(--body);
   opacity: 0.6;
   padding-top: 4px;
 }
 .final-moment .final-heading {
-  font: 400 78px/0.96 var(--font-display);
+  --fs: 78px;
   max-width: 530px;
 }
 .final-moment .statement {
@@ -422,7 +421,7 @@
   position: absolute;
   bottom: 35px;
   left: 5.5%;
-  font: 300 14px/1.5 var(--font-sans);
+  font: 300 14px/1.5 var(--body);
   opacity: 0.6;
 }
 .progress-track {
@@ -448,10 +447,10 @@
 }
 @media (min-width: 1500px) {
   .hero-moment h1 {
-    font-size: 140px;
+    --fs: 140px;
   }
   .hero-moment h1 .hero-secondary {
-    font-size: 51px;
+    --fs: 51px;
   }
   .hero-description {
     font-size: 32px;
@@ -467,10 +466,10 @@
 }
 @media (max-width: 1100px) and (min-width: 761px) {
   .hero-moment h1 {
-    font-size: 88px;
+    --fs: 88px;
   }
   .hero-moment h1 .hero-secondary {
-    font-size: 33px;
+    --fs: 33px;
   }
   .hero-description {
     font-size: 26px;
@@ -498,7 +497,7 @@
     gap: 20px;
   }
   .wordmark {
-    font-size: 37px;
+    --fs: 37px;
   }
   .brand-note {
     font-size: 11px;
@@ -519,11 +518,11 @@
     max-width: none;
   }
   .hero-moment h1 {
-    font-size: 58px;
+    --fs: 58px;
     line-height: 0.88;
   }
   .hero-moment h1 .hero-secondary {
-    font-size: 26px;
+    --fs: 26px;
     margin-top: 12px;
   }
   .hero-description {
@@ -607,14 +606,14 @@
     margin: 0 0 12px;
   }
   .big-number {
-    font-size: 116px;
+    --fs: 116px;
     margin: 15px 0;
   }
   .moment h2 {
-    font-size: 44px;
+    --fs: 44px;
   }
   .moment .arrival-heading {
-    font-size: 78px;
+    --fs: 78px;
     max-width: 300px;
   }
   .extra-work {
@@ -629,7 +628,7 @@
     font-size: 9px;
   }
   .final-moment .final-heading {
-    font-size: 49px;
+    --fs: 49px;
     line-height: 1.05;
   }
   .final-moment .statement {
@@ -652,10 +651,10 @@
     padding-top: 100px;
   }
   .hero-moment h1 {
-    font-size: 54px;
+    --fs: 54px;
   }
   .hero-moment h1 .hero-secondary {
-    font-size: 23px;
+    --fs: 23px;
   }
   .hero-description {
     font-size: 19px;
@@ -676,7 +675,7 @@
     padding: 10px 16px;
   }
   .big-number {
-    font-size: 94px;
+    --fs: 94px;
   }
   .statement {
     font-size: 23px;
@@ -771,4 +770,132 @@
   .final-moment .moment-copy {
     max-width: 100%;
   }
+}
+
+/* ---- Design variants: type and palette are switched with data attributes on <html> ---- */
+:root {
+  --display: "Bebas Neue", sans-serif;
+  --body: "Alegreya Sans", sans-serif;
+  --ui: "IBM Plex Mono", monospace;
+  --display-scale: 1;
+  --display-weight: 400;
+  --display-stretch: 100%;
+  --display-tracking: 0;
+  --display-transform: uppercase;
+  --display-leading: 0.9;
+  --body-weight: 300;
+  --body-tracking: 0;
+  --body-adjust: none;
+}
+html[data-type="bricolage"] {
+  --display: "Bricolage Grotesque", sans-serif;
+  --body: "Hanken Grotesk", sans-serif;
+  --ui: "Hanken Grotesk", sans-serif;
+  --display-scale: 0.9;
+  --display-weight: 650;
+  --display-stretch: 75%;
+  --display-tracking: -0.015em;
+  --display-transform: none;
+  --display-leading: 0.92;
+  --body-weight: 400;
+  --body-tracking: -0.01em;
+  --body-adjust: 0.44;
+}
+html[data-type="instrument"] {
+  --display: "Instrument Sans", sans-serif;
+  --body: "Instrument Sans", sans-serif;
+  --ui: "Instrument Sans", sans-serif;
+  --display-scale: 0.84;
+  --display-weight: 600;
+  --display-stretch: 75%;
+  --display-tracking: -0.022em;
+  --display-transform: none;
+  --display-leading: 0.95;
+  --body-weight: 400;
+  --body-tracking: -0.012em;
+  --body-adjust: 0.44;
+}
+.wordmark,
+.hero-moment h1,
+.hero-moment h1 .hero-secondary,
+.big-number,
+.moment h2,
+.final-moment .final-heading {
+  font-family: var(--display);
+  font-size: calc(var(--fs) * var(--display-scale));
+  font-weight: var(--display-weight);
+  font-stretch: var(--display-stretch);
+  letter-spacing: var(--display-tracking);
+  text-transform: var(--display-transform);
+  line-height: var(--display-leading);
+  font-size-adjust: none;
+  font-optical-sizing: auto;
+}
+.wordmark {
+  text-transform: uppercase;
+  letter-spacing: 0;
+}
+.big-number {
+  font-variant-numeric: tabular-nums;
+}
+html[data-palette="paper"] {
+  --background: #efe9d0;
+  --foreground: #26381f;
+  --secondary: #55662e;
+  --glass: #e3eeec;
+  --glass-ink: #22331f;
+  --glass-muted: #55664f;
+}
+html[data-palette="glasshouse"] {
+  --background: #edf1e7;
+  --foreground: #16302a;
+  --secondary: #3f5a3a;
+  --glass: #dcebec;
+  --glass-ink: #16302a;
+  --glass-muted: #4c645e;
+}
+html[data-palette="sage"] {
+  --background: #e2e8d2;
+  --foreground: #1f3320;
+  --secondary: #4a5e2c;
+  --glass: #eef3ea;
+  --glass-ink: #1f3320;
+  --glass-muted: #52654a;
+}
+.variant-switcher {
+  position: fixed;
+  left: 12px;
+  bottom: 12px;
+  z-index: 50;
+  display: grid;
+  gap: 6px;
+  padding: 8px;
+  background: #111;
+  color: #eee;
+  border-radius: 8px;
+  font: 500 11px/1 system-ui, sans-serif;
+  font-size-adjust: none;
+  letter-spacing: 0;
+}
+.variant-switcher div {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.variant-switcher span {
+  width: 44px;
+  opacity: 0.6;
+}
+.variant-switcher button {
+  background: #2a2a2a;
+  color: #eee;
+  border: 0;
+  border-radius: 5px;
+  padding: 6px 8px;
+  cursor: pointer;
+  font: inherit;
+}
+.variant-switcher button[aria-pressed="true"] {
+  background: #eee;
+  color: #111;
 }

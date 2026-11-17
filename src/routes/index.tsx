@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Garden } from "@/components/garden";
 import { AgentPane } from "@/components/agent-pane";
+import { VariantSwitcher } from "@/components/variant-switcher";
 import { Button } from "@/components/ui/button";
 import { joinWaitlist } from "@/lib/waitlist.functions";
 import { waitlistSchema } from "@/lib/waitlist-schema";
@@ -233,9 +234,9 @@ function Index() {
         <section className="moment hero-moment" data-step="0">
           <div className="moment-copy">
             <h1>
-              <span>STANDALONE</span>
-              <span>GRC AGENTS.</span>
-              <span className="hero-secondary">NEXT TO ANY PLATFORM.</span>
+              <span>Standalone</span>
+              <span>GRC agents.</span>
+              <span className="hero-secondary">Next to any platform.</span>
             </h1>
             <p className="hero-description">
               Domain-trained Oxten agents do the GRC work you didn't think you could hand off.
@@ -254,14 +255,14 @@ function Index() {
         </section>
         <section className="moment" data-step="2">
           <div className="moment-copy">
-            <h2 className="arrival-heading">OXTEN'S HERE NOW.</h2>
+            <h2 className="arrival-heading">Oxten's here now.</h2>
           </div>
         </section>
         <section className="moment" data-step="3">
           <div className="moment-copy">
             <p className="work-title">Works the evidence request list.</p>
             <div className="big-number">
-              <span data-count="5">5</span> MIN
+              <span data-count="5">5</span> min
             </div>
             <p className="statement">Your existing evidence, mapped to auditor requests.</p>
           </div>
@@ -285,7 +286,7 @@ function Index() {
           <div className="moment-copy">
             <p className="work-title">Manages third-party security reviews.</p>
             <div className="big-number">
-              <span data-count="0">0</span> MIN
+              <span data-count="0">0</span> min
             </div>
             <p className="statement">What your next vendor assessment will take you.</p>
           </div>
@@ -306,7 +307,7 @@ function Index() {
         </section>
         <section className="moment extras-moment" data-step="7">
           <div className="moment-copy">
-            <h2>AND EVERYTHING IN BETWEEN.</h2>
+            <h2>And everything in between.</h2>
             <div className="extra-list">
               {extras.map((text, i) => (
                 <p className="extra-work" key={text}>
@@ -329,8 +330,11 @@ function Index() {
         </section>
         <section className="moment platform-moment" data-step="9">
           <div className="moment-copy">
-            <h2>KEEP YOUR PLATFORM.</h2>
-            <h2>ADD THE MULTIPLIER.</h2>
+            <h2>
+              Keep your platform.
+              <br />
+              Add the multiplier.
+            </h2>
             <p className="statement">
               ServiceNow, Archer, AuditBoard, OneTrust, or a spreadsheet. Oxten works next to all of
               them. No migration. No implementation.
@@ -339,7 +343,7 @@ function Index() {
         </section>
         <section className="moment final-moment" data-step="10">
           <div className="moment-copy">
-            <h2 className="final-heading">YOUR TEAM IS ABOUT TO GET A LOT BIGGER.</h2>
+            <h2 className="final-heading">Your team is about to get a lot bigger.</h2>
             <p className="statement">
               We're opening the doors to a small group of GRC, security, and AI leaders.
             </p>
@@ -348,6 +352,7 @@ function Index() {
           <footer>From the team behind Complyance. © 2026 Oxten</footer>
         </section>
       </div>
+      <VariantSwitcher />
     </main>
   );
 }
