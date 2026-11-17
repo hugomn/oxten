@@ -2,6 +2,7 @@
 
 Usage: python3 scripts/build-home.py <path to the design index.html>
 
+Copy the design folder's .webp files to public/versions/v5/ first.
 Writes src/home/v5.html: image paths point at /versions/v5/, the review switcher is off,
 the invite form posts to /api/waitlist, and the document head carries the site metadata.
 """
@@ -16,7 +17,8 @@ DESCRIPTION = (
 
 src = open(sys.argv[1], encoding="utf-8").read()
 src = src.replace('<meta name="robots" content="noindex">\n', "")
-src = re.sub(r"(?<![/\w])((?:dusk|midday|morning|night)(?:-sm)?\.webp)", r"/versions/v5/\1", src)
+# Every image the design references by bare file name is served from /versions/v5/.
+src = re.sub(r"(?<![/\w.-])([a-z][a-z0-9-]*\.webp)", r"/versions/v5/\1", src)
 src = re.sub(r"<title>.*?</title>", f"<title>{TITLE}</title>", src, count=1, flags=re.S)
 src = re.sub(r'<meta name="description"[^>]*>\n?', "", src, count=1)
 
